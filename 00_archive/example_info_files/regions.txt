@@ -1,0 +1,6 @@
+000000F|arrow
+000001F|arrow
+000006F|arrow
+000038F|arrow
+000040F|arrow
+000069F|arrow

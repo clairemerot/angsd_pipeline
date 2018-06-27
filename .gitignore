@@ -1,0 +1,9 @@
+*.bam
+*.fa
+*.fas
+*.fasta
+*.fastq
+*.fq
+*.gz
+*.sam
+*~
