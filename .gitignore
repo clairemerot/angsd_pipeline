@@ -7,3 +7,11 @@
 *.gz
 *.sam
 *~
+02_info/*
+03_saf_maf_gl_all/*
+04_pca/*
+05_ngs_admix/*
+06_saf_maf_by_pop/*
+07_fst_by_pop_pair/*
+08_thetas/*
+09_gwas/*
