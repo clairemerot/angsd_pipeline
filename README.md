@@ -30,15 +30,15 @@ export YOURMAIL=claire.merot@gmail.com
 
 ##input: fill 02_info folder with useful files for all steps
 #- info.txt: a file listing the bamfile names ordered  with a column for any relevant information on the individuals
-# 			for follow-up analyses with R ideally: col1=bam_filename, col2=id, col3=sex, col4=pop, col5=group, col6=group ...
+#for follow-up analyses with R ideally: col1=bam_filename, col2=id, col3=sex, col4=pop, col5=group, col6=group ...
 #- pop.txt: a file listing population names with one item by line (there can be several files if we aimed at analysing different grouping, group.txt)
 #- genome.fasta: the reference genome on which bam have been aligned
-#				if it is not indexed run:
+#if it is not indexed run:
 module load samtools
 samtools faidx 02-info/genome.fasta
 #- region.txt: a file listing the regions of the genome (chromosome or scaffolds) to be included in the analysis.
-#				For initial tests, put manually just a few, one per line
-#				To list all scaffolds of the genome
+#For initial tests, put manually just a few, one per line
+#To list all scaffolds of the genome
 grep -e ">" 02_info/genome.fasta | awk 'sub(/^>/, "")' | sort -k1 > 02_info/region.txt
 
 ##edit the 01_config.sh file
