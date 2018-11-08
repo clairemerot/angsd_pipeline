@@ -2,11 +2,10 @@
 #SBATCH -J "07_FST_by_pop_pair"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p ibismini
-#SBATCH -A ibismini
+#SBATCH -p small
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=2-00:00
+#SBATCH --time=7-00:00
 #SBATCH --mem=15G
 
 ###this script will use the saf by population calculated at step 07 and calculate SFS and FST

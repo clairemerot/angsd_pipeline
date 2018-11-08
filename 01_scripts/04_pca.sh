@@ -2,12 +2,11 @@
 #SBATCH -J "04_pca"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p ibismini
-#SBATCH -A ibismini
+#SBATCH -p large
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=3-00:00
-#SBATCH --mem=20480
+#SBATCH --time=5-00:00
+#SBATCH --mem=200G
 
 ###this script will work on all individuals using the beagle genotype likelihood and calculate a covariance matrix with angsd & a pca with R
 #this requires pcangsd to be cloned and a version of Python v2 with alias python2

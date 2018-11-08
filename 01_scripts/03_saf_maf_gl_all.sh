@@ -1,17 +1,16 @@
 #!/bin/bash
 #SBATCH -J "03_saf_maf_gl_all"
 #SBATCH -o log_%j
-#SBATCH -c 1
-#SBATCH -p ibismini
-#SBATCH -A ibismini
+#SBATCH -c 4 
+#SBATCH -p medium
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=1-00:00
-#SBATCH --mem=10240
+#SBATCH --time=7-00:00
+#SBATCH --mem=30G
 
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
 #maybe edit
-NB_CPU=1 #change accordingly in SLURM header
+NB_CPU=4 #change accordingly in SLURM header
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
@@ -27,14 +26,14 @@ echo "keep loci with at leat one read for n individuals = $MIN_IND, which is $PE
 echo "filter on allele frequency = $MIN_MAF"
 
 ####Calculate the SAF, MAF and GL
-angsd -P $NB_CPU -nQueueSize 50 -doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -minMaf $MIN_MAF -b 02_info/bam.filelist -rf 02_info/regions.txt -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+angsd -P $NB_CPU -nQueueSize 50 -doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -minMaf $MIN_MAF -b 02_info/bam.filelist -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
 
 #main features
 #-P nb of threads -nQueueSize maximum waiting in memory (necesary to optimize CPU usage
 # -doMaf 1 (allele frequencies)  -dosaf (prior for SFS) -GL (Genotype likelihood 2 GATK method - export GL in beagle format  -doGLF2) 
 # -doMajorMinor 1 use the most frequent allele as major
 # -anc provide a ancestral sequence = reference in our case -fold 1 (car on utilise la ref comme ancestral
-# -rf (file with the region written) work on a defined region
+# -rf (file with the region written) work on a defined region : DISABLED
 # -b (bamlist) input file
 # -out  output file
 

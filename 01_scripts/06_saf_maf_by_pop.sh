@@ -2,11 +2,10 @@
 #SBATCH -J "06_saf_maf_by_pop"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p ibismini
-#SBATCH -A ibismini
+#SBATCH -p medium
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=2-00:00
+#SBATCH --time=7-00:00
 #SBATCH --mem=15G
 
 ###this script will work on bamfiles by population and calculate saf  & maf 

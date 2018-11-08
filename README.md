@@ -3,37 +3,35 @@
 #run all commands from the angsd_pipeline folder
 
 ## 00_DEPENDANCIES
-##install angsd & associated programs
-#http://www.popgen.dk/angsd/index.php/ANGSD
-#add angsd to the path in .bashrc
-#add the misc folder (containing RealSFS, theta stat etc to the path in .bashrc
+install angsd & associated programs
+http://www.popgen.dk/angsd/index.php/ANGSD
+add angsd to the path in .bashrc
+add the misc folder (containing RealSFS, theta stat etc to the path in .bashrc
 export PATH="/home/camer78/Softwares/angsd2/angsd:$PATH"
 export PATH="/home/camer78/Softwares/angsd2/angsd/misc:$PATH"
 
-#install NGSAdmix (maybe in the misc folder, else export its path)
-#http://www.popgen.dk/software/index.php/NgsAdmix
+install NGSAdmix (maybe in the misc folder, else export its path)
+http://www.popgen.dk/software/index.php/NgsAdmix
 
-#install pcangsd (maybe in the misc folder) & check if you have python2
-#http://www.popgen.dk/software/index.php/PCAngsd
-#copy the path into 01_config.sh PCA_ANGSD_PATH=~/Softwares/pcangsd
+install pcangsd (maybe in the misc folder) & check if you have python2
+http://www.popgen.dk/software/index.php/PCAngsd
+copy the path into 01_config.sh PCA_ANGSD_PATH=~/Softwares/pcangsd
 
-##for use of slurm
-#add this command in .bashrc to replace YOUREMAIL by your true e-mail in all slurm header for katak jobs
-export YOURMAIL=claire.merot@gmail.com
+for all script file, you may edit the header to put your email adress and adjust cpu/memory/time/allocation and slurm partition 
 
 ## 01_PREPARE_DATA
 
-##input: bam-files
-#aligned to the reference, indexed and sorted, named like "id_sex_pop_group_blablabla.sorted.bam
-#must be kept in original folder, just know the path to their location from the angsd_pipeline folder
-#insert this path in BAM_PATH= in the 01_config.sh
+input: bam-files
+aligned to the reference, indexed and sorted, named like "id_sex_pop_group_blablabla.sorted.bam
+must be kept in original folder, just know the path to their location from the angsd_pipeline folder
+insert this path in BAM_PATH= in the 01_config.sh
 
-##input: fill 02_info folder with useful files for all steps
-#- info.txt: a file listing the bamfile names ordered  with a column for any relevant information on the individuals
-#for follow-up analyses with R ideally: col1=bam_filename, col2=id, col3=sex, col4=pop, col5=group, col6=group ...
-#- pop.txt: a file listing population names with one item by line (there can be several files if we aimed at analysing different grouping, group.txt)
-#- genome.fasta: the reference genome on which bam have been aligned
-#if it is not indexed run:
+input: fill 02_info folder with useful files for all steps
+- info.txt: a file listing the bamfile names ordered  with a column for any relevant information on the individuals
+for follow-up analyses with R ideally: col1=bam_filename, col2=id, col3=sex, col4=pop, col5=group, col6=group ...
+- pop.txt: a file listing population names with one item by line (there can be several files if we aimed at analysing different grouping, group.txt)
+- genome.fasta: the reference genome on which bam have been aligned
+if it is not indexed run:
 module load samtools
 samtools faidx 02-info/genome.fasta
 #- region.txt: a file listing the regions of the genome (chromosome or scaffolds) to be included in the analysis.

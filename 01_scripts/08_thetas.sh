@@ -2,11 +2,10 @@
 #SBATCH -J "08_thetas"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p ibismini
-#SBATCH -A ibismini
+#SBATCH -p medium
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=2-00:00
+#SBATCH --time=7-00:00
 #SBATCH --mem=15G
 
 ###this script will work on bamfiles by population and calculate saf  & maf 
@@ -27,7 +26,7 @@ MIN_IND_FLOAT=$(echo "($N_IND * $PERCENT_IND)"| bc -l)
 MIN_IND=${MIN_IND_FLOAT%.*} 
 echo "estimate thetas for all samples"
 realSFS 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".saf.idx -P $NB_CPU > 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs
-angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 3 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" -b 02_info/bam.filelist -rf 02_info/regions.txt -pest 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs -out 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 3 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" -b 02_info/bam.filelist -pest 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs -out 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
 #Estimate for every Chromosome/scaffold
 thetaStat do_stat 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetas.idx
 #Do a sliding window analysis based on the output from the make_bed command.
@@ -52,7 +51,7 @@ do
 	realSFS 06_saf_maf_by_pop/$i/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".saf.idx -P $NB_CPU 	> 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs
 	
 	echo "estimate thetas for pop $i"
-	angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 3 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" -b 02_info/"$i"bam.filelist -rf 02_info/regions.txt -pest 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs -out 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+	angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 3 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" -b 02_info/"$i"bam.filelist -pest 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs -out 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"
 	
 	#Estimate for every Chromosome/scaffold
 	thetaStat do_stat 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetas.idx

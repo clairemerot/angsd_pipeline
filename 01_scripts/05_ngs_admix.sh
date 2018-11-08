@@ -2,11 +2,10 @@
 #SBATCH -J "05_ngs_admix"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p ibismini
-#SBATCH -A ibismini
+#SBATCH -p large
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=3-00:00
+#SBATCH --time=15-00:00
 #SBATCH --mem=20480
 
 ###this script will work on all individuals using the beagle genotype likelihood and perform an admixture analysis 
