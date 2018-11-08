@@ -34,32 +34,34 @@ for follow-up analyses with R ideally: col1=bam_filename, col2=id, col3=sex, col
 if it is not indexed run:
 module load samtools
 samtools faidx 02-info/genome.fasta
-#- region.txt: a file listing the regions of the genome (chromosome or scaffolds) to be included in the analysis.
-#For initial tests, put manually just a few, one per line
-#To list all scaffolds of the genome
+
+- region.txt: a file listing the regions of the genome (chromosome or scaffolds) to be included in the analysis.
+NOTE THIS POSSIBILITY HAS BEEN TEMPORALLY REMOVED
+For initial tests, put manually just a few, one per line
+To list all scaffolds of the genome
 grep -e ">" 02_info/genome.fasta | awk 'sub(/^>/, "")' | sort -k1 > 02_info/region.txt
 
-##edit the 01_config.sh file
-#choose MIN_MAF, PERCENT_IND filters, WINDOW and WINDOW_STEP for sliding-windows analyses, and K_MIN, K_MAX for admixture analysis
+edit the 01_config.sh file
+choose MIN_MAF, PERCENT_IND filters, WINDOW and WINDOW_STEP for sliding-windows analyses, and K_MIN, K_MAX for admixture analysis
 
 ## 02_LIST_BAMFILES_AND_LIST_BY_POP
-#this script will make a list of all bamfiles and several list by population, based on information in bamfile names and pop.txt
-#edit script if you want to add another way of grouping (group.txt)
+this script will make a list of all bamfiles and several list by population, based on information in bamfile names and pop.txt
+edit script if you want to add another way of grouping (group.txt)
 ./01_scripts/02_list_bamfiles.sh
 
 ## 03_RUN_INITIAL_ANALYSIS_ON_WHOLE_DATASET
-#this script will work on all bamfiles and calculate saf, maf & genotype likelihood on the whole dataset
-#will output in 02_info folder the list of SNP which passed the MIN_MAF and PERCENT_IND filters & their Major-minor alleles (sites_*)
-#maybe edit the number of cpu NB_CPU and allocated memory/time
+this script will work on all bamfiles and calculate saf, maf & genotype likelihood on the whole dataset
+will output in 02_info folder the list of SNP which passed the MIN_MAF and PERCENT_IND filters & their Major-minor alleles (sites_*)
+maybe edit the number of cpu NB_CPU and allocated memory/time
 sbatch 01_scripts/03_saf_maf_gl_all.sh
-#srun -c1 --mem 1G 01_scripts/03_saf_maf_gl_all.sh
+
 
 ## 04_PCA_VISUALISE_CHECK_WHETHER_YOU_WANT_TO_EXCLUDE_OUTLIERS
-#this script will work on all individuals using the beagle genotype likelihood and calculate a covariance matrix with angsd
-#it also output the pca with R, and visualisation in pdf
-#check for outliers (or duplicates), one may to re-run step 03 and 04 with an edited bamlist
-#this requires pcangsd to be cloned and a version of Python v2 with alias python2
-#maybe edit NB_CPU
+this script will work on all individuals using the beagle genotype likelihood and calculate a covariance matrix with angsd
+it also output the pca with R, and visualisation in pdf
+check for outliers (or duplicates), one may to re-run step 03 and 04 with an edited bamlist
+this requires pcangsd to be cloned and a version of Python v2 with alias python2
+maybe edit NB_CPU
 sbatch 01_scripts/04_pca.sh
 
 #for further visualisation using information from info.txt
@@ -67,11 +69,10 @@ source 01_scripts/01_config.sh
 Rscript 01_scripts/Rscripts/visualise_pca.r "$MIN_MAF" "$PERCENT_IND"
 
 ## 05_ADMIXTURE_ANALYSIS
-#this script will work on all individuals using the beagle genotype likelihood and perform an admixture analysis
-#this requires NGSadmix to be installed and its path export in the bashrc
-#NGS admiw will explore all number of population between K_MIN and K_MAX as provided in the 01_config.sh
-#maybe edit NB_CPU=1
-#edit K_MIN and K_MAX in the 01_config.sh
+this script will work on all individuals using the beagle genotype likelihood and perform an admixture analysis
+this requires NGSadmix to be installed and its path export in the bashrc
+NGS admiw will explore all number of population between K_MIN and K_MAX as provided in the 01_config.sh
+maybe edit NB_CPU=1#edit K_MIN and K_MAX in the 01_config.sh
 sbatch 01_scripts/05_ngs_admix.sh
 
 #for further visualisation using information from info.txt
@@ -80,62 +81,62 @@ BAM_LIST=02_info/bam.filelist
 Rscript 01_scripts/Rscripts/visualise_admix.r "$MIN_MAF" "$PERCENT_IND" "$K_MIN" "$K_MAX" "$BAM_LIST"
 
 ## 06_CALCULATE_ALLELES_FREQUENCIES_BY_POP
-#this script will work on bamfiles by population and calculate saf  & maf
-#maybe edit
-#NB_CPU=1
-#POP_FILE1=02_info/pop.txt #choose on which list of pop run the analyses
-#will run on the list of sites determined at step 3 (filter on global population)
-#in addition it will filter for sites with at least one read in a minimum proportion of individuals within each pop
+this script will work on bamfiles by population and calculate saf  & maf
+maybe edit
+NB_CPU=1
+POP_FILE1=02_info/pop.txt #choose on which list of pop run the analyses
+will run on the list of sites determined at step 3 (filter on global population)
+in addition it will filter for sites with at least one read in a minimum proportion of individuals within each pop
 sbatch 01_scripts/06_saf_maf_by_pop.sh
 
 ## 07_CALCULATE_PAIRWISE_FST
-#this script will use the saf by population calculated at step 07 and calculate SFS and FST
-#maybe edit NB_CPU=1 #change accordingly in SLURM header
-#POP_FILE1=02_info/pop.txt #choose on which list of pop run the analyses
+This script will use the saf by population calculated at step 07 and calculate SFS and FST
+maybe edit NB_CPU=1 #change accordingly in SLURM header
+POP_FILE1=02_info/pop.txt #choose on which list of pop run the analyses
 sbatch 01_scripts/07_fst_by_pop_pair.sh
 
-#for further visualisation
-#requires the corrplot packqge
+for further visualisation
+requires the corrplot packqge
 install.packages("corrplot")
 POP1_FILE=02_info/pop.txt
 Rscript 01_scripts/Rscripts/visualise_fst.r "$MIN_MAF" "$PERCENT_IND" "$POP1_FILE"
 
 ## 08_CALCULATE_THETAS
-#this script will use the saf on all individuals and the saf by population calculated at step 07
-#to calculate thetas statistics.
-#beware if ancestral sequenc is the reference (folded spectrum), not all stats are meaningful.
+this script will use the saf on all individuals and the saf by population calculated at step 07
+to calculate thetas statistics.
+beware if ancestral sequenc is the reference (folded spectrum), not all stats are meaningful.
 sbatch 01_scripts/08_thetas.sh
 
 ## 09_MAKE_GWAS
-#those two scripts can do a gwas either with binary phenoty "_bin" or quantitative phenotype "_quant"
-#phenotype files should be put in 02_info
-#bin_pheno.txt #this file must be one single column with phenotype coded as 1 or 2, each line is one individual in the same order as bamfile
-#quant_pheno.txt #this file must be one single column with quantitative phenotype, each line is one individual in the same order as bamfile
-#beware, the quantitative gwas is made to include a covariable (for instance sex) coded as binary # change the $COV if needed
+those two scripts can do a gwas either with binary phenoty "_bin" or quantitative phenotype "_quant"
+phenotype files should be put in 02_info
+bin_pheno.txt #this file must be one single column with phenotype coded as 1 or 2, each line is one individual in the same order as bamfile
+quant_pheno.txt #this file must be one single column with quantitative phenotype, each line is one individual in the same order as bamfile
+beware, the quantitative gwas is made to include a covariable (for instance sex) coded as binary # change the $COV if needed
 sbatch 01_scripts/09_gwas_bin.sh
 sbatch 01_scripts/09_gwas_quant.sh
 
 ## 10_ANALYSING_MAF_SELECTION_TESTS_ETC
-#to extract maf and gather all pop maf in one file
-#it will aslo output the list of snps for which maf was calculated in all populations (represented by the min % of IND given as filter
-#out put is in 10_maf_analysis/02_raw_data
+to extract maf and gather all pop maf in one file
+it will aslo output the list of snps for which maf was calculated in all populations (represented by the min % of IND given as filter
+out put is in 10_maf_analysis/02_raw_data
 source 01_scripts/01_config.sh
 POP1_FILE=02_info/pop.txt
 Rscript 01_scripts/Rscripts/extract_maf.r "$MIN_MAF" "$PERCENT_IND" "$POP1_FILE"
 
-#or to proceed straight to formatting maf for various analyses
-#to extract maf and gather all pop maf in one file (same as above)+ format them for rda & various analysis
-#it will aslo output in the list of snps for which maf was calculated in all populations (represented by the min % of IND given as filter
+or to proceed straight to formatting maf for various analyses
+to extract maf and gather all pop maf in one file (same as above)+ format them for rda & various analysis
+it will aslo output in the list of snps for which maf was calculated in all populations (represented by the min % of IND given as filter
 source 01_scripts/01_config.sh
 POP1_FILE=02_info/pop.txt
 Rscript 01_scripts/Rscripts/extract_format_maf.r "$MIN_MAF" "$PERCENT_IND" "$POP1_FILE"
 
-#next steps
-#add environment file in 10_maf_analysis/02_raw_data env.txt
-#format the env file for the different analyses
+next steps
+add environment file in 10_maf_analysis/02_raw_data env.txt
+format the env file for the different analyses
 
-#add scripts for rda, lfmm (lea), baypass, flk in 10_maf_analysis/01_scripts
-#maybe outflank but works on gneotype...
+add scripts for rda, lfmm (lea), baypass, flk in 10_maf_analysis/01_scripts
+maybe outflank but works on gneotype...
 
 ## 11_ANALYSING_LD
-#possibility to output plink format from angsd and then further analyses in plink?
+possibility to output plink format from angsd and then further analyses in plink?
