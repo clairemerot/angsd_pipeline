@@ -2,7 +2,7 @@
 BAM_PATH=../10_bam_ready
 
 #path to pcaangsd
-PCA_ANGSD_PATH=~/Softwares/pcangsd 
+PCA_ANGSD_PATH=/project/lbernatchez/programs/pcangsd 
 
 #filter : will keep SNP above this allele frequency (over all individuals)
 MIN_MAF=0.05 
