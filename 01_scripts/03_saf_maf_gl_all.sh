@@ -2,10 +2,10 @@
 #SBATCH -J "03_saf_maf_gl_all"
 #SBATCH -o log_%j
 #SBATCH -c 4 
-#SBATCH -p medium
+#SBATCH -p small
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=7-00:00
+#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --time=1-00:00
 #SBATCH --mem=30G
 
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
@@ -43,13 +43,13 @@ angsd -P $NB_CPU -nQueueSize 50 -doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1
 #filter on allele frequency -minMaf, set to 0.05 
 
 #extract SNP which passed the MIN_MAF and PERCENT_IND filters & their Major-minor alleles
-#index it
+#order the sites file by chromosome names 
+#makes a region file matching the sites files and with same order
+#index sites file
 echo "from the maf file, extract a list of SNP chr, positoin, major all, minor all"
 gunzip 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".mafs.gz 
-cd 03_saf_maf_gl_all
-Rscript ../01_scripts/Rscripts/make_sites_list.R "$MIN_MAF" "$PERCENT_IND"
-mv sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" ../02_info/
-cd ..
+Rscript 01_scripts/Rscripts/make_sites_list.R "$MIN_MAF" "$PERCENT_IND"
+
 angsd sites index 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
 
 #Eric propose a much shorter version using bash to cut the 4 columns of the mafs.gz. but then angsd is unable to index it
