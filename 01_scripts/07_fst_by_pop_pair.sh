@@ -2,10 +2,10 @@
 #SBATCH -J "07_FST_by_pop_pair"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p small
+#SBATCH -p large
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=7-00:00
+#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --time=21-00:00
 #SBATCH --mem=15G
 
 ###this script will use the saf by population calculated at step 07 and calculate SFS and FST
@@ -16,6 +16,8 @@ POP_FILE1=02_info/pop.txt #choose on which list of pop run the analyses
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
+module load angsd
+ulimit -S -n 2048
 
 #prepare variables - avoid to modify
 source 01_scripts/01_config.sh

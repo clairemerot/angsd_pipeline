@@ -2,10 +2,10 @@
 #SBATCH -J "04_pca"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p large
+#SBATCH -p medium
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=5-00:00
+#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --time=7-00:00
 #SBATCH --mem=200G
 
 ###this script will work on all individuals using the beagle genotype likelihood and calculate a covariance matrix with angsd & a pca with R
@@ -27,7 +27,8 @@ BAM_LIST=02_info/bam.filelist
 INPUT=03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".beagle.gz
 
 echo "analyse covariance matrix on all individuals"
-python $PCA_ANGSD_PATH/pcangsd.py -threads $NB_CPU -beagle $INPUT -o 04_pca/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+python2 $PCA_ANGSD_PATH/pcangsd.py -threads $NB_CPU \
+	-beagle $INPUT -o 04_pca/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
 
 echo "transform covariance matrix into PCA"
 Rscript 01_scripts/Rscripts/make_pca.R "$MIN_MAF" "$PERCENT_IND" "$BAM_LIST"

@@ -4,9 +4,9 @@
 #SBATCH -c 1
 #SBATCH -p large
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=YOUREMAIL
-#SBATCH --time=15-00:00
-#SBATCH --mem=20480
+#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --time=21-00:00
+#SBATCH --mem=200G
 
 ###this script will work on all individuals using the beagle genotype likelihood and perform an admixture analysis 
 #this requires NGSadmix to be installed and its path export in the bashrc

@@ -2,18 +2,23 @@
 #SBATCH -J "03_saf_maf_gl_all"
 #SBATCH -o log_%j
 #SBATCH -c 4 
-#SBATCH -p small
+#SBATCH -p medium
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=claire.merot@gmail.com
-#SBATCH --time=1-00:00
-#SBATCH --mem=30G
+#SBATCH --time=7-00:00
+#SBATCH --mem=100G
 
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
 #maybe edit
 NB_CPU=4 #change accordingly in SLURM header
+REGIONS="-rf 02_info/regions_25kb_100snp.txt" #optional
+#REGIONS="" # to remove the options to focus on a limited number of regions
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
+
+module load angsd
+ulimit -S -n 2048
 
 #prepare variables - avoid to modify
 source 01_scripts/01_config.sh
@@ -26,7 +31,11 @@ echo "keep loci with at leat one read for n individuals = $MIN_IND, which is $PE
 echo "filter on allele frequency = $MIN_MAF"
 
 ####Calculate the SAF, MAF and GL
-angsd -P $NB_CPU -nQueueSize 50 -doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -minMaf $MIN_MAF -b 02_info/bam.filelist -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+angsd -P $NB_CPU -nQueueSize 50 \
+-doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 \
+-anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 \
+-minInd $MIN_IND -minMaf $MIN_MAF -b 02_info/bam.filelist \
+$REGIONS -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
 
 #main features
 #-P nb of threads -nQueueSize maximum waiting in memory (necesary to optimize CPU usage
