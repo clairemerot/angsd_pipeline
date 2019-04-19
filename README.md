@@ -154,8 +154,30 @@ sbatch 01_scripts/09_gwas_bin.sh
 
 sbatch 01_scripts/09_gwas_quant.sh
 
-## 10_ANALYSING_MAF_SELECTION_TESTS_ETC
+## MAKING PCA BY WINDOW ALONG GENOME
+important: edit window size - this is a number of SNPs
+
+sbatch 01_scripts/10_pca_by_window.sh
+
+This script will call a python script written by Eric Normandeau to split the begale files into windows of a given size within 
+each chromosome/scaffold. They are stored into beagle_by_window folder
+Then, it will run pcangsd on each window of X SNPs. Covariances matrices are stored into cov_by_window folder
+
+sbatch 01_scripts/10_run_local_pca
+important: edit window size and choose whether using or not a complementary info file (provide path) on which we will test 
+correlation between the PC1 scores of each window and the given variable (this could be for instance a phenotype, a score along a 
+PC axis determined on the whole dataset or a single LG, etc...)
+
+This call a R script and will need library lostruct and clustertend.
+It applies the method proposed in Li, H., & Ralph, P. (2019). Local PCA shows how the effect of population structure differs 
+along the genome. Genetics, 211(1), 289-304.
+
+In addition, for each window, we test for a clustering tendency by calculating hopkins statistics and we calculate whether PC1 
+correlates with PC1-2-3 of the global PCA (and if given with other quantitative variables) Output several figures to visualize 
+that.
+
+## ANALYSING_MAF_SELECTION_TESTS_ETC
 See selection_pipeline
 
-## 11_ANALYSING_LD
+## ANALYSING_LD
 possibility to output plink format from angsd and then further analyses in plink?
