@@ -110,7 +110,7 @@ for (j in 1:length(LGs))
 		{
 			print(paste("calculating hopkins for LG", j,"window",i))
 			PC_mat_i<- cbind(window_eigs[4:(3+N_ind),i],window_eigs[(4+N_ind):(3+2*N_ind),i])
-			window_order_j$h_stat[i]<-1 #hopkins(PC_mat_i,N_ind/2, header=FALSE)
+			window_order_j$h_stat[i]<-hopkins(PC_mat_i,N_ind/2, header=FALSE)
 			window_order_j$corr_pc1[i]<-abs(cor.test(PC_mat_i[,1], info_pc[,1])$estimate)
 			window_order_j$corr_pc2[i]<-abs(cor.test(PC_mat_i[,1], info_pc[,2])$estimate)
 			window_order_j$corr_pc3[i]<-abs(cor.test(PC_mat_i[,1], info_pc[,3])$estimate)
