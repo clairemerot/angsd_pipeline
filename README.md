@@ -149,6 +149,8 @@ phenotype files should be put in 02_info
 - bin_pheno.txt #this file must be one single column with phenotype coded as 1 or 2, each line is one individual in the same order as bamfile
 - quant_pheno.txt #this file must be one single column with quantitative phenotype, each line is one individual in the same order as bamfiles. 
 Beware, the quantitative gwas is made to include a covariable (for instance sex) coded as binary # change the $COV if needed
+Missing data must be coded -999
+see example files in 00_archives
 
 sbatch 01_scripts/09_gwas_bin.sh
 
