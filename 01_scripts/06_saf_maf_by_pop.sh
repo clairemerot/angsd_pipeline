@@ -37,7 +37,7 @@ echo "will filter for sites with at least one read in $MIN_IND individuals, whic
 
 angsd -P $NB_CPU -nQueueSize 50 \
 -doMaf 1 -dosaf 1 -GL 2 -doMajorMinor 3 \
--anc 02_info/genome.fasta -fold 1 \
+-anc 02_info/genome.fasta \
 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
 -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" \
 -b 02_info/"$i"bam.filelist -out 06_saf_maf_by_pop/$i/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"

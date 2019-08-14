@@ -6,10 +6,11 @@
 argv <- commandArgs(T)
 MIN_MAF <- argv[1]
 PERCENT_IND <- argv[2]
-maf<-read.table( paste0("03_saf_maf_gl_all/all_maf",MIN_MAF,"_pctind",PERCENT_IND,".mafs"), header=T)
+MAX_DEPTH_FACTOR <- argv [3]
+maf<-read.table( paste0("03_saf_maf_gl_all/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".mafs"), header=T)
 head (maf)
 sites<-maf[,1:4]
 sites_order <- sites[order(sites$chromo),] 
 regions_order<-levels(sites_order$chromo)
-write.table(sites_order, paste0("02_info/sites_all_maf", MIN_MAF, "_pctind",PERCENT_IND), row.names=F, col.names=F, sep="\t", quote=F)
-write.table(regions_order, paste0("02_info/regions_maf", MIN_MAF, "_pctind",PERCENT_IND), row.names=F, col.names=F, sep="\t", quote=F)
+write.table(sites_order, paste0("02_info/sites_all_maf", MIN_MAF, "_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR), row.names=F, col.names=F, sep="\t", quote=F)
+write.table(regions_order, paste0("02_info/regions_maf", MIN_MAF, "_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR), row.names=F, col.names=F, sep="\t", quote=F)

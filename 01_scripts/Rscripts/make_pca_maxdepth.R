@@ -5,9 +5,10 @@ argv <- commandArgs(T)
 MIN_MAF <- argv[1]
 PERCENT_IND <- argv[2]
 BAM <- argv[3]
+MAX_DEPTH_FACTOR <-argv[4]
 
 #perform a cpa on covariance matrix
-cov_mat<-as.matrix(read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,".cov"), header=F))
+cov_mat<-as.matrix(read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".cov"), header=F))
 pca<-prcomp(cov_mat)
 
 #add column names
@@ -21,10 +22,10 @@ bam_names<-read.table(BAM,header=F)
 rownames(pca$x)<-bam_names$V1
 
 #plot pca
-pdf(file=paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,".pca.pdf"))
+pdf(file=paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".pca.pdf"))
 par(mfrow=c(1,2))
 plot(pca$x[,1], pca$x[,2], pch=20, ylab="PC2", xlab="PC1")
 plot(pca$x[,3], pca$x[,4], pch=20, ylab="PC4", xlab="PC3")
 dev.off()
 
-write.table(pca$x, paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,".pca"), quote=F)
+write.table(pca$x, paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".pca"), quote=F)
