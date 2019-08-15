@@ -10,6 +10,10 @@ MIN_MAF=0.05
 #filter : will keep SNP with at least one read for this percentage of individuals (over all individuals in step 03, and within each pop at step 07)
 PERCENT_IND=0.5 
 
+#filter: will keep SNP with at least a coverage of this factor multiplied by the number of ind - across all ind. usually set 2-4
+#times the coverage to remove repeated regions
+MAX_DEPTH_FACTOR=3
+
 #window size for sliding window FST & Thetas
 WINDOW=25000 
 
