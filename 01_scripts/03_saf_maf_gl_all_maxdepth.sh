@@ -25,7 +25,7 @@ source 01_scripts/01_config.sh
 N_IND=$(wc -l 02_info/bam.filelist | cut -d " " -f 1)
 MIN_IND_FLOAT=$(echo "($N_IND * $PERCENT_IND)"| bc -l)
 MIN_IND=${MIN_IND_FLOAT%.*} 
-MAX_DEPTH=$(echo ($N_IND * $MAX_DEPTH_FACTOR)" |bc -1)
+MAX_DEPTH=$(echo "($N_IND * $MAX_DEPTH_FACTOR)" |bc -l)
 
 echo " Calculate the SAF, MAF and GL for all individuals listed in 02_info/bam.filelist"
 echo "keep loci with at leat one read for n individuals = $MIN_IND, which is $PERCENT_IND % of total $N_IND individuals"
@@ -33,7 +33,7 @@ echo "filter on allele frequency = $MIN_MAF"
 
 ####Calculate the SAF, MAF and GL
 angsd -P $NB_CPU -nQueueSize 50 \
--doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 -doCounts 1 \ 
+-doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 -doCounts 1 \
 -anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 \
 -minInd $MIN_IND -minMaf $MIN_MAF -setMaxDepth $MAX_DEPTH \
 -b 02_info/bam.filelist \
