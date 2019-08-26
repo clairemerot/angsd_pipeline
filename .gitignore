@@ -7,6 +7,7 @@
 *.gz
 *.sam
 *~
+log*
 02_info/*
 03_saf_maf_gl_all/*
 04_pca/*
