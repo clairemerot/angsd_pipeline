@@ -24,7 +24,7 @@ source 01_scripts/01_config.sh
 BAM_LIST=02_info/bam.filelist
 
 #this is the input file for the pca
-INPUT=03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth_"$MAX_DEPTH_FACTOR".beagle.gz
+INPUT=03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".beagle.gz
 
 echo "analyse covariance matrix on all individuals"
 python2 $PCA_ANGSD_PATH/pcangsd.py -threads $NB_CPU \
