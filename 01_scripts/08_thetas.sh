@@ -4,7 +4,7 @@
 #SBATCH -c 4
 #SBATCH -p large
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --mail-user=YOURMAIL
 #SBATCH --time=21-00:00
 #SBATCH --mem=80G
 
@@ -28,22 +28,26 @@ MIN_IND_FLOAT=$(echo "($N_IND * $PERCENT_IND)"| bc -l)
 MIN_IND=${MIN_IND_FLOAT%.*} 
 
 echo "estimate thetas for all samples"
-#we need to re-do doSaf because it seems that it does not work at step 03 (is it because we filter at the same time? or because we ask of a GL output?)
+#we need to re-do doSaf because we don't want to filter on maf for thetas calculation
+#I don't use the fold option anymore - but be aware that only T watterson and Taj D are interpretable if anc is the ref genome
 angsd -P $NB_CPU -nQueueSize 50 \
 -dosaf 1 -GL 2 -doMajorMinor 3 \
--anc 02_info/genome.fasta -fold 1 \
+-anc 02_info/genome.fasta \
 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
--sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" \
--b 02_info/bam.filelist -out 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+-b 02_info/bam.filelist -out 08_thetas/all_pctind"$PERCENT_IND"
 
-realSFS 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".saf.idx -P $NB_CPU > 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs
-angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 3 -anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" -b 02_info/bam.filelist -pest 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs -out 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+realSFS 08_thetas/all_pctind"$PERCENT_IND".saf.idx -P $NB_CPU > 08_thetas/all_pctind"$PERCENT_IND".sfs
+
+angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 3 -anc 02_info/genome.fasta \
+-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -b 02_info/bam.filelist \
+-pest 08_thetas/all_pctind"$PERCENT_IND".sfs -out 08_thetas/all_pctind"$PERCENT_IND"
 
 #Estimate for every Chromosome/scaffold
-thetaStat do_stat 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetas.idx
+thetaStat do_stat 08_thetas/all_pctind"$PERCENT_IND".thetas.idx
 
 #Do a sliding window analysis based on the output from the make_bed command.
-thetaStat do_stat 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetas.idx -win $WINDOW -step $WINDOW_STEP -outnames 08_thetas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetaswindow
+thetaStat do_stat 08_thetas/all_pctind"$PERCENT_IND".thetas.idx -win $WINDOW -step $WINDOW_STEP \
+-outnames 08_thetas/all_pctind"$PERCENT_IND".thetaswindow
 
 
 
@@ -56,21 +60,29 @@ do
 	MIN_IND=${MIN_IND_FLOAT%.*} 
 
 	#unsure whether we should specify the sites & filter for the thetas too??
-	echo "working on pop $i, $N_IND individuals, will use the sites file provided"
+	echo "working on pop $i, $N_IND individuals"
 	echo "will filter for sites with at least one read in $MIN_IND individuals, which is $PERCENT_IND of the total"
 	
+	#we need to re-do doSaf because we don't want to filter on maf for thetas calculation
+	#I don't use the fold option anymore - but be aware that only T watterson and Taj D are interpretable if anc is the ref genome
+	angsd -P $NB_CPU -nQueueSize 50 \
+	-dosaf 1 -GL 2 -doMajorMinor 3 \
+	-anc 02_info/genome.fasta \
+	-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
+	-b 02_info/"$i"bam.filelist -out 08_thetas/"$i"_pctind"$PERCENT_IND"
 	
 	echo "estimate real sfs for pop $i"
-	realSFS 06_saf_maf_by_pop/$i/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".saf.idx -P $NB_CPU 	> 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs
+	realSFS 06_saf_maf_by_pop/$i/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".saf.idx -P $NB_CPU > 08_thetas/"$i"_pctind"$PERCENT_IND".sfs
 	
 	echo "estimate thetas for pop $i"
 	angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 3 \
-	-anc 02_info/genome.fasta -fold 1 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
-	-sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" -b 02_info/"$i"bam.filelist \
-	-pest 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".sfs -out 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"
+	-anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
+	-b 02_info/"$i"bam.filelist \
+	-pest 08_thetas/"$i"_pctind"$PERCENT_IND".sfs -out 08_thetas/"$i"_pctind"$PERCENT_IND"
 	
 	#Estimate for every Chromosome/scaffold
-	thetaStat do_stat 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetas.idx
+	thetaStat do_stat 08_thetas/"$i"_pctind"$PERCENT_IND".thetas.idx
 	#Do a sliding window analysis based on the output from the make_bed command.
-	thetaStat do_stat 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetas.idx -win $WINDOW -step $WINDOW_STEP -outnames 08_thetas/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND".thetaswindow
+	thetaStat do_stat 08_thetas/"$i"_pctind"$PERCENT_IND".thetas.idx -win $WINDOW -step $WINDOW_STEP \
+	-outnames 08_thetas/"$i"_pctind"$PERCENT_IND".thetaswindow
 done
