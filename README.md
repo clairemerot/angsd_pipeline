@@ -2,7 +2,7 @@
 
 #run all commands from the angsd_pipeline folder
 #for an overview of the pipeline please see
-https://drive.google.com/drive/folders/1P2mhnmmVBIdGyNWi88PAiZDI5XYEAHSS
+https://drive.google.com/file/d/14bmwOkdbdfSsfNDrYNxR2V8kHZyNuIlm/view?usp=sharing
 
 ## 00_DEPENDANCIES
 install angsd & associated programs
