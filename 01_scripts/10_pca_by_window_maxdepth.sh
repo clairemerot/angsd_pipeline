@@ -6,12 +6,14 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=claire.merot@gmail.com
 #SBATCH --time=7-00:00
-#SBATCH --mem=30G
+#SBATCH --mem=50G
 
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
 #maybe edit
 NB_CPU=4 #change accordingly in SLURM header
-window_size=80000 #nb of Snps per window
+window_size=760000 #nb of Snps per window - this is for a window of the size of my biggest chromosome
+#window_size=1000 # for small window along a chromosome for instance
+# adjust memory accordingly - small window = few memory - big window more memory (1G for 1000 snp - 50G for a chromosome
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
@@ -23,10 +25,10 @@ source 01_scripts/01_config.sh
 echo "split beagle into windows within each scaffold"
 
 ####split beagle into non overlapping windows
-mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND_maxdepth"$MAX_DEPTH_FACTOR"
-mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"/$window_size"
-mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"/$window_size/beagle_by_window"
-mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"/$window_size/cov_by_window"
+mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR
+mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"/"$window_size
+mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"/"$window_size"/beagle_by_window"
+mkdir "10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"/"$window_size"/cov_by_window"
 
 python 01_scripts/utility_scripts/beagle_sliding_window.py 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".beagle.gz $window_size 10_pca_by_window/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"/"$window_size"/beagle_by_window/
 

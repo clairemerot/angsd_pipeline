@@ -2,11 +2,11 @@
 #SBATCH -J "07_FST_by_pop_pair"
 #SBATCH -o log_%j
 #SBATCH -c 1
-#SBATCH -p large
+#SBATCH -p medium
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=YOURMAIL
-#SBATCH --time=21-00:00
-#SBATCH --mem=15G
+#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --time=3-00:00
+#SBATCH --mem=50G
 
 ###this script will use the saf by population calculated at step 07 and calculate SFS and FST
 #maybe edit
@@ -36,8 +36,8 @@ do
 		echo "$pop2"
 		
 		echo "calcualte the 2dsfs priors"
-		realSFS  06_saf_maf_by_pop/$pop1/"$pop1"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".saf.idx 
-\06_saf_maf_by_pop/$pop2/"$pop2"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".saf.idx \
+		realSFS  06_saf_maf_by_pop/$pop1/"$pop1"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".saf.idx \
+06_saf_maf_by_pop/$pop2/"$pop2"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".saf.idx \
 -P $NB_CPU > 07_fst_by_pop_pair/"$pop1"_"$pop2"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".ml
 		
 		echo " prepare the fst for easy window analysis etc"

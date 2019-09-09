@@ -4,18 +4,20 @@
 #SBATCH -c 1
 #SBATCH -p medium
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=YOURMAIL
+#SBATCH --mail-user=claire.merot@gmail.com
 #SBATCH --time=7-00:00
-#SBATCH --mem=40G
+#SBATCH --mem=150G
 
 #varibles to edit
 NB_CPU=1 #change accordingly in SLURM header
 PHENO=02_info/quantitative_pheno.txt #this file must be one single column with quantitative phenotype, each line is one individual in the same order as bamfile
-COV= -cov 02_info/bin_pheno.txt #for instance sex, this file must be one single column with phenotype coded as 1 or 2, each line is one individual in the same order as bamfile
+COV="-cov 02_info/bin_pheno.txt" #for instance sex, this file must be one single column with phenotype coded as 1 or 2, each line is one individual in the same order as bamfile
 #COV="" to remove the covariance
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
+module load angsd
+ulimit -S -n 2048
 
 #prepare variables - avoid to modify
 source 01_scripts/01_config.sh
