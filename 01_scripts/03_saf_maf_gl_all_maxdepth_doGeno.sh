@@ -34,7 +34,7 @@ echo "filter on allele frequency = $MIN_MAF"
 ####Calculate the SAF, MAF and GL
 angsd -P $NB_CPU -nQueueSize 50 \
 -doMaf 1 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 -doCounts 1 \
--doGeno 2 -doDepth 1 -maxDepth 1000 -dumpCounts 2 \
+-doGeno 2 -doPost 1 -doDepth 1 -maxDepth 1000 -dumpCounts 2 \
 -anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 \
 -minInd $MIN_IND -minMaf $MIN_MAF -setMaxDepth $MAX_DEPTH -postCutoff 0.5 \
 -b 02_info/bam.filelist \

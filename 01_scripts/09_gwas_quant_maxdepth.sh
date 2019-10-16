@@ -13,6 +13,7 @@ NB_CPU=3 #change accordingly in SLURM header
 PHENO=02_info/quantitative_pheno.txt #this file must be one single column with quantitative phenotype, each line is one individual in the same order as bamfile
 COV="-cov 02_info/bin_pheno.txt" #for instance sex, this file must be one single column with phenotype coded as 1 or 2, each line is one individual in the same order as bamfile
 #COV="" to remove the covariance
+REGIONS="-rf 02_info/regions_25kb_100snp.txt" #optional edit with your region selected file
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
@@ -30,4 +31,4 @@ MAX_DEPTH=$(echo "($N_IND * $MAX_DEPTH_FACTOR)" |bc -l)
 angsd -P $NB_CPU -nQueueSize 50 -yQuant $PHENO $COV \
 -doAsso 2 -GL 2 -doPost 1 -doMajorMinor 1 -doMaf 1 -doCounts 1 \
 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -minMaf $MIN_MAF -setMaxDepth $MAX_DEPTH \
--b 02_info/bam.filelist -out 09_gwas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".quant.gwas
+$REGIONS -b 02_info/bam.filelist -out 09_gwas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".quant.gwas
