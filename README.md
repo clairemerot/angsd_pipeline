@@ -33,9 +33,14 @@ They can  be kept in original folder, just know the path to their location from 
 
 insert this path in BAM_PATH= in the 01_config.sh
 
+Useful for most analysis:
+
 - info.txt in 02_info folder: a file listing the bamfile names ordered  with a column for any relevant information on the individuals
 for follow-up analyses with R ideally: col1=bam_filename, col2=id, col3=sex, col4=pop, col5=group, col6=group ...
 - pop.txt in 02_info folder : a file listing population names with one item by line (there can be several files if we aimed at analysing different grouping, group.txt)
+
+Necessary:
+
 - genome.fasta in 02_info folder: the reference genome on which bam have been aligned
 
 if it is not indexed run:
@@ -45,7 +50,6 @@ module load samtools
 samtools faidx 02-info/genome.fasta
 
 - region.txt: a file listing the regions of the genome (chromosome or scaffolds) to be included in the analysis.
-NOTE THIS POSSIBILITY HAS BEEN TEMPORALLY REMOVED
 
 For initial tests, put manually just a few, one per line
 
@@ -55,7 +59,8 @@ grep -e ">" 02_info/genome.fasta | awk 'sub(/^>/, "")' | sort -k1 > 02_info/regi
 
 - edit the 01_config.sh file
 
-choose MIN_MAF, PERCENT_IND filters, WINDOW and WINDOW_STEP for sliding-windows analyses, and K_MIN, K_MAX for admixture analysis
+choose MIN_MAF, PERCENT_IND filters, MAX_DEPTH filter for intials steps
+For later steps, choose WINDOW and WINDOW_STEP for sliding-windows analyses, and K_MIN, K_MAX for admixture analysis
 
 ## 02_LIST_BAMFILES_AND_LIST_BY_POP
 this script will make a list of all bamfiles and several list by population, based on information in bamfile names and pop.txt
@@ -70,7 +75,11 @@ this script will work on all bamfiles and calculate saf, maf & genotype likeliho
 
 maybe edit the number of cpu NB_CPU and allocated memory/time
 
+old:
 sbatch 01_scripts/03_saf_maf_gl_all.sh
+
+newer ( will also calculate depth, drop depth by ind and total, and filter on max_depth):
+sbatch 01_scripts/03_saf_maf_gl_depth_all.sh
 
 
 ## 04_PCA_VISUALISE_CHECK_WHETHER_YOU_WANT_TO_EXCLUDE_OUTLIERS
