@@ -1,18 +1,18 @@
 #!/bin/bash
-#SBATCH -J "03_saf_maf_gl_all_maxdepth"
+#SBATCH -J "03_saf_maf_gl_depth_all"
 #SBATCH -o log_%j
-#SBATCH -c 1 
+#SBATCH -c 5 
 #SBATCH -p medium
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOURMAIL
 #SBATCH --time=7-00:00
-#SBATCH --mem=10G
+#SBATCH --mem=50G
 
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
 #maybe edit
-NB_CPU=1 #change accordingly in SLURM header
+NB_CPU=5 #change accordingly in SLURM header
 #REGIONS="-rf 02_info/regions_25kb_100snp.txt" #optional edit with your region selected file
-REGIONS="-r LG6" # to remove the options to focus on a limited number of regions
+#REGIONS="-r LG6" # to remove the options to focus on a limited number of regions
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
@@ -22,7 +22,7 @@ ulimit -S -n 2048
 
 #prepare variables - avoid to modify
 source 01_scripts/01_config.sh
-N_IND=$(wc -l 02_info/AGbam.filelist | cut -d " " -f 1)
+N_IND=$(wc -l 02_info/bam.filelist | cut -d " " -f 1)
 MIN_IND_FLOAT=$(echo "($N_IND * $PERCENT_IND)"| bc -l)
 MIN_IND=${MIN_IND_FLOAT%.*} 
 MAX_DEPTH=$(echo "($N_IND * $MAX_DEPTH_FACTOR)" |bc -l)
@@ -37,7 +37,7 @@ angsd -P $NB_CPU -nQueueSize 50 \
 -doDepth 1 -maxDepth 1000 -dumpCounts 2 \
 -anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 \
 -minInd $MIN_IND -minMaf $MIN_MAF -setMaxDepth $MAX_DEPTH \
--b 02_info/AGbam.filelist \
+-b 02_info/bam.filelist \
 $REGIONS -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 
 #main features
