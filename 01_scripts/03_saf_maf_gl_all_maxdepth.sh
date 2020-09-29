@@ -11,8 +11,8 @@
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
 #maybe edit
 NB_CPU=4 #change accordingly in SLURM header
-REGIONS="-rf 02_info/regions_25kb_100snp.txt" #optional edit with your region selected file
-#REGIONS="" # to remove the options to focus on a limited number of regions
+#REGIONS="-rf 02_info/regions_25kb_100snp.txt" #optional edit with your region selected file
+REGIONS="" # to remove the options to focus on a limited number of regions
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
