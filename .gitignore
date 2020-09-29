@@ -16,3 +16,7 @@ log*
 07_fst_by_pop_pair/*
 08_thetas/*
 09_gwas/*
+11_plink/*
+12_ngsLD/*
+13_coverage/*
+14_HWE/*
