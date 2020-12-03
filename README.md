@@ -155,26 +155,48 @@ sbatch 01_scripts/09_gwas_bin.sh
 sbatch 01_scripts/09_gwas_quant.sh
 ```
 ## 10 MAKING PCA BY WINDOW ALONG GENOME
+This step include several modules that should be run successively
 important: edit window size - this is a number of SNPs
-```
-sbatch 01_scripts/10_pca_by_window.sh
-```
-This script will call a python script written by Eric Normandeau to split the begale files into windows of a given size within 
+windows od 100 to 10 000 SNPs allows analysis along the genome, while a large window can be chosen if one wants to make a pca by chromosome (see also 10C to directly do a local PCA on a given window)
+
+A- This script will call a python script written by Eric Normandeau to split the begale files into windows of a given size within 
 each chromosome/scaffold. They are stored into beagle_by_window folder
 Then, it will run pcangsd on each window of X SNPs. Covariances matrices are stored into cov_by_window folder
+```
+sbatch 01_scripts/10A_cov_by_window.sh
+```
 
-sbatch 01_scripts/10_run_local_pca
-important: edit window size and choose whether using or not a complementary info file (provide path) on which we will test 
-correlation between the PC1 scores of each window and the given variable (this could be for instance a phenotype, a score along a 
-PC axis determined on the whole dataset or a single LG, etc...)
-
-This call a R script and will need library lostruct and clustertend.
+B- This script will call a R script using the lostruct package https://github.com/petrelharp/local_pca
 It applies the method proposed in Li, H., & Ralph, P. (2019). Local PCA shows how the effect of population structure differs 
 along the genome. Genetics, 211(1), 289-304.
 
-In addition, for each window, we test for a clustering tendency by calculating hopkins statistics and we calculate whether PC1 
-correlates with PC1-2-3 of the global PCA (and if given with other quantitative variables) Output several figures to visualize 
-that.
+In addition, the R script test correlation between the PC1 scores of each window and the PCs of the global pca done at step 04
+
+IMPORTANT: edit window size to fit what was given to the A script, edit the nb of individuals and the nombre of PC to consider in lostruct, and the nb of axis of the MDS to look at and save
+
+```
+window_size=100 #nb of Snps per window
+N_IND=1446 #nb of individuals included in the analysis
+N_PC=2 #nb of PC to consider when comparing windows
+N_MDS=50 #nb of MDS dimension in the output
+```
+
+```
+sbatch 01_scripts/10B_pca_lostruct.sh
+```
+
+C- After the analysis of the MDS which may highlight regions of interest, or if one is interested in doing PCA on a chosen window, this script will call select the region in the beagle using a python script written by Eric Normandeau, call Pcangsd to get the covariance matrix, and a R script to get the PCa and plot it.
+
+important: this requires a file with two column with the start and stop of the wanted region separated by a tab
+for instance
+```
+LG1_125 LG1_456
+```
+
+It will output pca, eigen-values and images.
+```
+sbatch 01_scripts/10C_pca_chosen_regions.sh
+```
 
 ## 11 LD pruning with PLINK
 This step allow outputing genotype likelihoods in plink format and run plink to extract a list of LD-pruned SNPs.
