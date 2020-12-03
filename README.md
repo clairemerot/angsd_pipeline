@@ -1,8 +1,8 @@
-# angsd_pipeline
+# angsd_pipeline for population genomics with low-coverage whole-genome sequencing
 
-#run all commands from the angsd_pipeline folder
-#for an overview of the pipeline please see
-https://drive.google.com/file/d/14bmwOkdbdfSsfNDrYNxR2V8kHZyNuIlm/view?usp=sharing
+IMPORTANT: run all commands from the angsd_pipeline folder
+# overview of the pipeline 
+![overview_angsd_pipeline](https://github.com/clairemerot/angsd_pipeline/blob/master/Angsd_possibilities.jpg)
 
 ## 00_DEPENDANCIES
 install angsd & associated programs
