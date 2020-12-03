@@ -8,7 +8,7 @@ PERCENT_IND <- argv[2]
 
 #read info file
 x_info<-read.table("02_info/info.txt", header=T)
-pca.mat<-read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,".pca"), header=T)
+pca.mat<-read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"cov.pca"), header=T)
 
 if (dim(x_info)[1]!=dim(pca.mat)[1]){print ("warning : not the same number of indivuals in the pca and the info file")}
 
