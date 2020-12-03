@@ -210,10 +210,46 @@ VIF=2
 sbatch 01_scripts/11_plink_pruning.sh
 ```
 ## 12 LD calculation by NGSLD
-This step allow outputing genotype likelihoods in plink format and run plink to extract a list of LD-pruned SNPs.
+A- This step uses NGSld https://github.com/fgvieira/ngsLD to calculate linkage disequilibrium.
+
+To reduce computation time and focus on informative positions, this script re-run the 1st step of ANGSD to output a beagle with a differnt threhold of MAF and percent of individuals with at least 1 read, and by chromosome (LG).
+
+This may be edited in the script with the following variables. region_LG.txt is a text file with one chromosome name per line. It loops over it, but it can also be parrallelized by chromosome.
+
+LD calculation is followed by a python script writte by Eric Normandeau which summarize the LD by blocks of a given size, and output the different quantile of the R² distribution.
+
 ```
-sbatch 01_scripts/11_plink_pruning.sh
+LG_FILE1= 02_info/region_LG.txt #work on a chosen subset of LG
+MIN_MAF=0.10 #filter : will keep SNP above this allele frequency (over all individuals)
+PERCENT_IND=0.75 #filter : will keep SNP with at least one read for this percentage of individuals
+MAX_DEPTH_FACTOR=3 #filter : will keep SNP with less than X time the nb of individuals total coverage
 ```
+```
+sbatch 01_scripts/12A_ngsLD_byLG.sh
+```
+
+B- The second script is more specific, it is used to calculate LD on sub-groups of individuals (for instance homokaryotes of an inversion). 
+
+To make Ld comparable between groups, it will subset each group to have the same number of samples, using a R script
+Then, it loops over each group to make sub-beagle for each group, calculate LD and output it by blocks
+
+Again we edit some variables, and choose which LG to run on and which group of samples
+```
+LG=LG3 #work on a one chromosme
+GROUP=karyotype_LG3
+POP_FILE1=02_info/"$GROUP".txt #choose on which list of pop run the analyses
+
+#do not edit if 12A has been run for each LG under the same filters. if not, please run before
+#because we are here re-using the beagle produced with all samples, on the given LG
+MIN_MAF=0.10 #filter : will keep SNP above this allele frequency (over all individuals)
+PERCENT_IND=0.75 #filter : will keep SNP with at least one read for this percentage of individuals
+MAX_DEPTH_FACTOR=3 #filter : will keep SNP with less than X time the nb of individuals total coverage
+```
+```
+sbatch 01_scripts/12B_ngsLD_bygroup.sh
+```
+
+
 ## 13 Hardy-Weinberg statistics and Hobs
 This step use the -hwe module of angsd to output HW statistics per population/group.
 
