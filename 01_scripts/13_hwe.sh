@@ -4,7 +4,7 @@
 #SBATCH -c 6
 #SBATCH -p medium
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --mail-user=YOURMAIL
 #SBATCH --time=7-00:00
 #SBATCH --mem=80G
 
@@ -29,15 +29,15 @@ echo $i
 angsd -P $NB_CPU -nQueueSize 50 \
 -doHWE 1 -GL 2 -remove_bads 1 -minMapQ 30 -minQ 20 -doMajorMinor 3 \
 -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
--b 02_info/"$i"bam.filelist -out 14_HWE/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
+-b 02_info/"$i"bam.filelist -out 13_HWE/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 
 
 
 #Rscript to infer Hobs and do sliding window output
 
-gunzip 14_HWE/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".hwe.gz
+gunzip 13_HWE/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".hwe.gz
 
-FILE=14_HWE/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".hwe
+FILE=13_HWE/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".hwe
 
 #window size and window step are chosen in the 01_config or can be edited here
 #WINDOW=25000

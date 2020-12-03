@@ -40,6 +40,7 @@ angsd -P $NB_CPU -nQueueSize 50 \
 -anc 02_info/genome.fasta \
 -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
 -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
+-rf 02_infos/regions_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
 -b 02_info/"$i"bam.filelist -out 06_saf_maf_by_pop/$i/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 
 gunzip 06_saf_maf_by_pop/$i/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".mafs.gz

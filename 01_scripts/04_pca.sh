@@ -4,7 +4,7 @@
 #SBATCH -c 1
 #SBATCH -p medium
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --mail-user=X
 #SBATCH --time=7-00:00
 #SBATCH --mem=200G
 

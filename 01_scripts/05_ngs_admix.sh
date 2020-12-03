@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J "05_ngs_admix"
 #SBATCH -o log_%j
-#SBATCH -c 1
+#SBATCH -c 5
 #SBATCH -p large
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=YOURMAIL
@@ -13,7 +13,7 @@
 #NGS admiw will explore all number of population between K_MIN and K_MAX as provided in the 01_config.sh
 
 #maybe edit
-NB_CPU=1 #change accordingly in SLURM header
+NB_CPU=5 #change accordingly in SLURM header
 
 
 # Important: Move to directory where job was submitted
@@ -28,5 +28,6 @@ source 01_scripts/01_config.sh
 for i in $(seq $K_MIN $K_MAX)
 	do 
 	echo $i
-	NGSadmix -P $NB_CPU -likes 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND".beagle.gz -minMaf $MIN_MAF -K $i -o 05_ngs_admix/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_K"$i"
+	NGSadmix -P $NB_CPU -likes 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".beagle.gz \
+	-minMaf $MIN_MAF -K $i -o 05_ngs_admix/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_K"$i"
 	done
