@@ -37,7 +37,7 @@ Useful for most analysis:
 
 - info.txt in 02_info folder: a file listing the bamfile names ordered  with a column for any relevant information on the individuals
 for follow-up analyses with R ideally: col1=bam_filename, col2=id, col3=sex, col4=pop, col5=group, col6=group ...
-- pop.txt in 02_info folder : a file listing population names with one item by line (there can be several files if we aimed at analysing different grouping, group.txt)
+- pop.txt in 02_info folder : a file listing population names with one item by line (there can be several files if we aimed at analysing different grouping, pop1.txt, pop_geo.txt, etc)
 
 Necessary:
 
@@ -54,6 +54,7 @@ samtools faidx 02-info/genome.fasta
 For initial tests, put manually just a few, one per line
 
 To list all scaffolds of the genome
+You may want to reduce this list to improve computation time and exclude short unanchored scaffold. 
 
 grep -e ">" 02_info/genome.fasta | awk 'sub(/^>/, "")' | sort -k1 > 02_info/region.txt
 
@@ -75,12 +76,8 @@ this script will work on all bamfiles and calculate saf, maf & genotype likeliho
 
 maybe edit the number of cpu NB_CPU and allocated memory/time
 
-old:
+
 sbatch 01_scripts/03_saf_maf_gl_all.sh
-
-newer ( will also calculate depth, drop depth by ind and total, and filter on max_depth):
-sbatch 01_scripts/03_saf_maf_gl_depth_all.sh
-
 
 ## 04_PCA_VISUALISE_CHECK_WHETHER_YOU_WANT_TO_EXCLUDE_OUTLIERS
 this script will work on all individuals using the beagle genotype likelihood and calculate a covariance matrix with angsd.
@@ -88,13 +85,13 @@ it also output the pca with R, and visualisation in pdf
 
 check for outliers (or duplicates), one may to re-run step 03 and 04 with an edited bamlist
 
-this requires pcangsd to be cloned and a version of Python v2 with alias python2
+this requires pcangsd to be cloned and a version of Python v2 with alias "python2"
 
 maybe edit NB_CPU and memory (sometimes require a lot of memory >100 G)
 
 sbatch 01_scripts/04_pca.sh
 
-#for further visualisation using information from info.txt
+For further visualisation using information from info.txt with the following commands
 
 source 01_scripts/01_config.sh
 
