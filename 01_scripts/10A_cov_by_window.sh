@@ -1,18 +1,18 @@
 #!/bin/bash
-#SBATCH -J "10_pca_by_window"
+#SBATCH -J "10A_cov_by_window"
 #SBATCH -o log_%j
 #SBATCH -c 4 
 #SBATCH -p medium
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --mail-user=XXX
 #SBATCH --time=7-00:00
-#SBATCH --mem=50G
+#SBATCH --mem=1G
 
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
 #maybe edit
 NB_CPU=4 #change accordingly in SLURM header
-window_size=760000 #nb of Snps per window - this is for a window of the size of my biggest chromosome
-#window_size=1000 # for small window along a chromosome for instance
+#window_size=760000 #nb of Snps per window - this is for a window of the size of my biggest chromosome
+window_size=1000 # for small window along a chromosome for instance
 # adjust memory accordingly - small window = few memory - big window more memory (1G for 1000 snp - 50G for a chromosome
 
 # Important: Move to directory where job was submitted
