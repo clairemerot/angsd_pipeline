@@ -104,7 +104,7 @@ write.table(mds_axe$eig,paste0("10_pca_by_window/all_maf",MIN_MAF,"_pctind",PERC
 info_pc<-read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".pca"))[,1:20]
 
 
-N_ind<-(dim(window_eigs)[1] - 1 - N_PC)/N_PC
+#N_ind<-(dim(window_eigs)[1] - 1 - N_PC)/N_PC
 for (i in 1: dim(window_order)[1])
 {
 	print(paste("calculating corr pca for window",i))
