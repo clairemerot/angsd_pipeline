@@ -12,7 +12,7 @@
 #maybe edit
 NB_CPU=4 #change accordingly in SLURM header
 
-LG_FILE1= 02_info/region_LG.txt #work on a chosen subset of LG
+LG_FILE1=02_info/region_LG.txt #work on a chosen subset of LG
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
