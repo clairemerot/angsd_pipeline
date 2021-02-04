@@ -31,15 +31,24 @@ echo " Calculate the SAF, MAF and GL for all individuals listed in 02_info/bam.f
 echo "keep loci with at leat one read for n individuals = $MIN_IND, which is $PERCENT_IND % of total $N_IND individuals"
 echo "filter on allele frequency = $MIN_MAF"
 
+###get the list of pruned sites
+#you need to run first the script 11_plink to extract the LD-pruned position
+#this R script will format the list and angsd will index it
+INPUT_plink=11_plink/all_plink_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".pruned.prune.in
+INPUT_angsd=02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
+
+Rscript 01_scripts/Rscripts/make_site_list_pruned.r "$INPUT_plink" "$INPUT_angsd"
+angsd sites index "$INPUT_angsd"_pruned
+
 ####Calculate the SAF, MAF and GL
 #we now use a list of snp corresponding to the LD-pruned snp by plink and removing the areas of inversions
 angsd -P $NB_CPU -nQueueSize 50 \
 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 3 \
 -anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 \
--sites 02_info/sites_"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_LDpruned \
+-sites 02_info/sites_"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_pruned \
 -rf 02_info/regions_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
 -b 02_info/bam.filelist \
--out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_LDpruned
+-out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_pruned
 
 #main features
 #-P nb of threads -nQueueSize maximum waiting in memory (necesary to optimize CPU usage
