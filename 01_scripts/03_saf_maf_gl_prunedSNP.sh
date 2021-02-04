@@ -4,15 +4,15 @@
 #SBATCH -c 4 
 #SBATCH -p medium
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=claire.merot@gmail.com
+#SBATCH --mail-user=XXX
 #SBATCH --time=7-00:00
 #SBATCH --mem=150G
 
 ###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
 #maybe edit
 NB_CPU=4 #change accordingly in SLURM header
-REGIONS="-rf 02_info/regions_25kb_100snp.txt" #optional edit with your region selected file
-#REGIONS=" " # to remove the options to focus on a limited number of regions
+#REGIONS="-rf 02_info/regions_25kb_100snp.txt" #optional edit with your region selected file
+REGIONS=" " # to remove the options to focus on a limited number of regions
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
@@ -36,10 +36,10 @@ echo "filter on allele frequency = $MIN_MAF"
 angsd -P $NB_CPU -nQueueSize 50 \
 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 3 \
 -anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 \
--sites 02_info/sites_pruned_noinv_maf0.05_pctind0.5 \
+-sites 02_info/sites_"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_LDpruned \
 -rf 02_info/regions_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
 -b 02_info/bam.filelist \
--out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_prunedSNPnoinv
+-out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_LDpruned
 
 #main features
 #-P nb of threads -nQueueSize maximum waiting in memory (necesary to optimize CPU usage
