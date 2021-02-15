@@ -31,6 +31,6 @@ python2 $PCA_ANGSD_PATH/pcangsd.py -threads $NB_CPU \
 	-beagle $INPUT -o 04_pca/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 
 echo "transform covariance matrix into PCA"
-COV_MAT<-04_pca/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".cov
+COV_MAT=04_pca/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".cov
 Rscript 01_scripts/Rscripts/make_pca_simple.r "$COV_MAT" "$BAM_LIST"
 
