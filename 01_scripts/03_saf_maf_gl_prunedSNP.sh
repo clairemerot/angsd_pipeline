@@ -45,7 +45,7 @@ angsd sites index "$INPUT_angsd"_pruned
 angsd -P $NB_CPU -nQueueSize 50 \
 -dosaf 1 -GL 2 -doGlf 2 -doMajorMinor 3 \
 -anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 \
--sites 02_info/sites_"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_pruned \
+-sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_pruned \
 -rf 02_info/regions_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
 -b 02_info/bam.filelist \
 -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_pruned
