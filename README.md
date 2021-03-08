@@ -47,7 +47,7 @@ if it is not indexed run:
 ```
 module load samtools
 
-samtools faidx 02-info/genome.fasta
+samtools faidx 02_info/genome.fasta
 ```
 - region.txt: a file listing the regions of the genome (chromosome or scaffolds) to be included in the analysis.
 
