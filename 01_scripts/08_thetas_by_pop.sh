@@ -11,7 +11,7 @@
 ###this script will work on bamfiles by population and calculate saf  & maf 
 #maybe edit
 NB_CPU=10 #change accordingly in SLURM header
-NSITES=10000000 #to make realSFS goes faster -reduce the number of sites considered
+NSITES=5000000 #to make realSFS goes faster -reduce the number of sites considered
 GROUP=pop #the subgroup on whcih we are making the fst comparison -> it should be a file like GROUP.txt in the folder 02_info
 POP_FILE1=02_info/"$GROUP".txt #choose on which list of pop run the analyses
 
