@@ -26,10 +26,12 @@ source 01_scripts/01_config.sh
 
 
 # Do thetas for all population listed
+#note that as bamlist I used teh ones with similar sample size drawn at the step 07 when doing the Fst.
+#if samplesize differences is not a pb, one can replace 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist by 02_info/"$i"bam.filelist
 cat $POP_FILE1 | while read i
 do
 	echo $i
-	N_IND=$(wc -l 02_info/"$i"bam.filelist | cut -d " " -f 1)
+	N_IND=$(wc -l 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist | cut -d " " -f 1)
 	MIN_IND_FLOAT=$(echo "($N_IND * $PERCENT_IND)"| bc -l)
 	MIN_IND=${MIN_IND_FLOAT%.*} 
 	MAX_DEPTH=$(echo "($N_IND * $MAX_DEPTH_FACTOR)" |bc -l)
@@ -40,7 +42,7 @@ do
 	
 	#we need to re-do doSaf because we don't want to filter on maf for thetas calculation
 	#I don't use the fold option anymore - but be aware that only T watterson and Taj D are interpretable if anc is the ref genome
-	angsd -P $NB_CPU -nQueueSize 50 -underFlowProtect 1 \
+	angsd -P $NB_CPU -underFlowProtect 1 \
 	-dosaf 1 -GL 2 -doMajorMinor 1 -doCounts 1 \
 	-anc 02_info/genome.fasta \
 	-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMaxDepth $MAX_DEPTH \
@@ -53,7 +55,7 @@ do
 	Rscript 01_scripts/Rscripts/sum_sites_sfs.r "$file"
 	
 	echo "estimate thetas for pop $i"
-	angsd -P $NB_CPU -nQueueSize 50 -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 1 -underFlowProtect 1 \
+	angsd -P $NB_CPU -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 1 -underFlowProtect 1 \
 	-anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
 	-b 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist \
 	-pest 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"."$NSITES".dsfs \
