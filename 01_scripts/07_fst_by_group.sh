@@ -46,12 +46,12 @@ MIN_IND=${MIN_IND_FLOAT%.*}
 echo "working on pop $i, $N_IND individuals, will use the sites file provided"
 echo "will filter for sites with at least one read in $MIN_IND individuals, which is $PERCENT_IND of the total"
 
-#angsd -P $NB_CPU -nQueueSize 50 -underFlowProtect 1 \
-#-dosaf 1 -GL 2 -doMajorMinor 3 \
-#-anc 02_info/genome.fasta \
-#-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
-#-sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
-#-b 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist -out 07_fst_by_pop_pair/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
+angsd -P $NB_CPU \
+-dosaf 1 -GL 2 -doMajorMinor 3 \
+-anc 02_info/genome.fasta \
+-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
+-sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
+-b 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist -out 07_fst_by_pop_pair/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 done
 
 
@@ -75,7 +75,7 @@ do
 		echo "calcualte the 2dsfs priors"
 		realSFS  07_fst_by_pop_pair/$GROUP/"$pop1"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".saf.idx \
 07_fst_by_pop_pair/$GROUP/"$pop2"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".saf.idx \
--P $NB_CPU -maxIter 50 -nSites $NSITES > 07_fst_by_pop_pair/$GROUP/"$pop1"_"$pop2"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"."$NSITES"
+-P $NB_CPU -maxIter 30 -nSites $NSITES > 07_fst_by_pop_pair/$GROUP/"$pop1"_"$pop2"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"."$NSITES"
 
 file=07_fst_by_pop_pair/$GROUP/"$pop1"_"$pop2"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"."$NSITES"
 
