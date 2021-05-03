@@ -104,13 +104,13 @@ write.table(mds_axe$eig,paste0("10_pca_by_window/all_maf",MIN_MAF,"_pctind",PERC
 info_pc<-read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".cov.pca"))[,1:4]
 
 
-#N_ind<-(dim(window_eigs)[1] - 1 - N_PC)/N_PC
+
 for (i in 1: dim(window_order)[1])
 {
 	print(paste("calculating corr pca for window",i))
-	PC_mat_i<- cbind(window_eigs[4:(3+N_ind),i],window_eigs[(4+N_ind):(3+2*N_ind),i])
-	window_order$eig_pc1[i]<-window_eigs[1,i] #not sure which number is eigenvalue or sum of square and how to get variance from there
-	window_order$eig_pc2[i]<-window_eigs[2,i]
+	PC_mat_i<- t(rbind(window_eigs[i,4:(3+N_ind)],window_eigs[i,(4+N_ind):(3+2*N_ind)]))
+	window_order$eig_pc1[i]<-window_eigs[i,1] #not sure which number is eigenvalue or sum of square and how to get variance from there
+	window_order$eig_pc2[i]<-window_eigs[i,2]
 	window_order$corr_pc1[i]<-abs(cor.test(PC_mat_i[,1], info_pc[,1])$estimate)
 	window_order$corr_pc2[i]<-abs(cor.test(PC_mat_i[,1], info_pc[,2])$estimate)
 	window_order$corr_pc3[i]<-abs(cor.test(PC_mat_i[,1], info_pc[,3])$estimate)
