@@ -101,7 +101,7 @@ write.table(mds_axe$eig,paste0("10_pca_by_window/all_maf",MIN_MAF,"_pctind",PERC
 ## if wanted,  one can also look at correlation with the PCs observed in the global PCA on the whole genome
 #import info on samples such as coordinates in the big PCA to see which portions of the genome are associated
 # with the structure seen on the first 3 PCs of the PCa on the whole genome
-info_pc<-read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".pca"))[,1:20]
+info_pc<-read.table(paste0("04_pca/all_maf",MIN_MAF,"_pctind",PERCENT_IND,"_maxdepth",MAX_DEPTH_FACTOR,".cov.pca"))[,1:20]
 
 
 #N_ind<-(dim(window_eigs)[1] - 1 - N_PC)/N_PC
