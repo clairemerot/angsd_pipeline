@@ -216,7 +216,8 @@ To reduce computation time and focus on informative positions, this script re-ru
 
 This may be edited in the script with the following variables. region_LG.txt is a text file with one chromosome name per line. It loops over it, but it can also be parrallelized by chromosome.
 
-LD calculation is followed by a python script writte by Eric Normandeau which summarize the LD by blocks of a given size, and output the different quantile of the R² distribution.
+
+
 
 ```
 LG_FILE1= 02_info/region_LG.txt #work on a chosen subset of LG
@@ -227,7 +228,12 @@ MAX_DEPTH_FACTOR=3 #filter : will keep SNP with less than X time the nb of indiv
 ```
 sbatch 01_scripts/12A_ngsLD_byLG.sh
 ```
+LD calculation is followed by a python script writted by Eric Normandeau (ld_by_blocks.py) which summarize the LD by blocks of a given size, and output the different quantile of the R²/D,etc distribution. It will need the header.txt file to be in the folder 12_ngsLD.
 
+Eric made a faster script (also in the utility folder) called "optimized", which runs faster but only output the R²em and first quantile (this is usually enough for most visualisation)
+```
+python3 01_scripts/utility_scripts/ld_by_blocks_optimized.py "$LD_FILE" 500 "$LD_FILE"_by_500.ld
+```
 B- The second script is more specific, it is used to calculate LD on sub-groups of individuals (for instance homokaryotes of an inversion). 
 
 To make Ld comparable between groups, it will subset each group to have the same number of samples, using a R script
