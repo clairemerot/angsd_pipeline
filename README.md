@@ -231,6 +231,8 @@ sbatch 01_scripts/12A_ngsLD_byLG.sh
 LD calculation is followed by a python script writted by Eric Normandeau (ld_by_blocks.py) which summarize the LD by blocks of a given size, and output the different quantile of the R²/D,etc distribution. It will need the header.txt file to be in the folder 12_ngsLD.
 
 Eric made a faster script (also in the utility folder) called "optimized", which runs faster but only output the R²em and first quantile (this is usually enough for most visualisation)
+
+2021: There is an even faster file that uses the compressed version of the ld, saving lots of space and does not need any header.
 ```
 python3 01_scripts/utility_scripts/ld_by_blocks_optimized.py "$LD_FILE" 500 "$LD_FILE"_by_500.ld
 ```
