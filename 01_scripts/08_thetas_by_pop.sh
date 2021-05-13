@@ -45,7 +45,7 @@ do
 	angsd -P $NB_CPU -underFlowProtect 1 \
 	-dosaf 1 -GL 2 -doMajorMinor 1 -doCounts 1 \
 	-anc 02_info/genome.fasta \
-	-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMaxDepth $MAX_DEPTH \
+	-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMaxDepth $MAX_DEPTH -setMinDepthInd $MIN_DEPTH \
 	-b 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist -out 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 	
 	echo "estimate real sfs for pop $i"
@@ -56,7 +56,7 @@ do
 	
 	echo "estimate thetas for pop $i"
 	angsd -P $NB_CPU -dosaf 1 -doThetas 1 -GL 2 -doMajorMinor 1 -underFlowProtect 1 \
-	-anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
+	-anc 02_info/genome.fasta -remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMinDepthInd $MIN_DEPTH \
 	-b 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist \
 	-pest 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"."$NSITES".dsfs \
 	-out 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
