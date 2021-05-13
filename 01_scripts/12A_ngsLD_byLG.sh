@@ -59,15 +59,24 @@ echo "calculating LD on " $i
 ngsLD --geno 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i".beagle.gz --probs --n_ind $N_IND --n_sites $N_SITES --pos $POS_FILE \
 --n_threads $NB_CPU --max_kb_dist 0 --max_snp_dist 0 --out 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i".ld --extend_out
 
-#run Eric's script to keep quartile values per windows of 1000kb, 500 kb, 250 kb
-cat 12_ngsLD/header 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i".ld > 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld
 
-python3 01_scripts/utility_scripts/ld_by_blocks.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld 1000 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_1000.ld
-python3 01_scripts/utility_scripts/ld_by_blocks.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld 500 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_500.ld
-python3 01_scripts/utility_scripts/ld_by_blocks.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld 250 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_250.ld
-
-#make space
-rm 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld
+#run Eric's optimized script on compressed file
 gzip 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i".ld
+
+python3 01_scripts/utility_scripts/ld_by_blocks_optimized_gzinput.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld.gz 1000 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_1000.ld
+python3 01_scripts/utility_scripts/ld_by_blocks_optimized_gzinput.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld.gz 500 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_500.ld
+python3 01_scripts/utility_scripts/ld_by_blocks_optimized_gzinput.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld.gz 250 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_250.ld
+
+
+##run Eric's script to keep quartile values per windows of 1000kb, 500 kb, 250 kb
+#cat 12_ngsLD/header 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i".ld > 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld
+#
+#python3 01_scripts/utility_scripts/ld_by_blocks.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld 1000 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_1000.ld
+#python3 01_scripts/utility_scripts/ld_by_blocks.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld 500 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_500.ld
+#python3 01_scripts/utility_scripts/ld_by_blocks.py 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld 250 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header_by_250.ld
+#
+##make space
+#rm 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"_header.ld
+#gzip 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i".ld
 
 done
