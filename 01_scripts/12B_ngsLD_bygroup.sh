@@ -77,28 +77,50 @@ N_IND=$(wc -l 12_ngsLD/"$GROUP"/"$i"subsetbam.filelist | cut -d " " -f 1)
 	ngsLD --geno 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".beagle.gz --probs --n_ind $N_IND --n_sites $N_SITES --pos $POS_FILE \
 	--n_threads $NB_CPU --max_kb_dist 0 --max_snp_dist 0 --out 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".ld --extend_out
 	
-	#smooth by window of X kb
-	echo "smooth by window "
-	cat 12_ngsLD/header 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".ld > 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld
+	gzip 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".ld
 	
-	python3 01_scripts/utility_scripts/ld_by_blocks.py \
-	12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld \
+	#smooth by window of X kb (new script)
+	echo "smooth by window "
+	python3 ld_by_blocks_optimized_gzinput.py \
+	12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld.gz \
 	1000 \
 	12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_1000.ld
 	
-	python3 01_scripts/utility_scripts/ld_by_blocks.py \
-        12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld \
-        500 \
-        12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_500.ld
-
-	python3 01_scripts/utility_scripts/ld_by_blocks.py \
-        12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld \
-        250 \
-        12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_250.ld
-
-	#make space
-	rm 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld
-	gzip 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".ld
+	python3 ld_by_blocks_optimized_gzinput.py \
+	12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld.gz \
+	500 \
+	12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_500.ld
+	
+	python3 ld_by_blocks_optimized_gzinput.py \
+	12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld.gz \
+	2500 \
+	12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_250.ld
+	
+	#smooth by window of X kb (former script)
+	#echo "smooth by window "
+	#cat 12_ngsLD/header 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".ld > 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld
+	#
+	#python3 01_scripts/utility_scripts/ld_by_blocks.py \
+	#12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld \
+	#1000 \
+	#12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_1000.ld
+	#
+	#python3 01_scripts/utility_scripts/ld_by_blocks.py \
+        #12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld \
+        #500 \
+        #12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_500.ld
+	#
+	#python3 01_scripts/utility_scripts/ld_by_blocks.py \
+        #12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld \
+        #250 \
+        #12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header_by_250.ld
+	#
+	##make space
+	#rm 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG"_header.ld
+	#gzip 12_ngsLD/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".ld
 	
 	
 done
+
+#make space by rezipping the full beagle
+gzip 12_ngsLD/$LG/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$LG".beagle
