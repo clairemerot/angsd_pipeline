@@ -44,7 +44,7 @@ mkdir 12_ngsLD/$i
 angsd -P $NB_CPU -nQueueSize 100 -underFlowProtect 1 \
 -dosaf 1 -GL 2 -doGlf 2 -doMaf 1 -doMajorMinor 1 -doCounts 1 \
 -anc 02_info/genome.fasta -r $i \
--remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMaxDepth $MAX_DEPTH -minMaf $MIN_MAF \
+-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMaxDepth $MAX_DEPTH -minMaf $MIN_MAF -setMinDepthInd $MIN_DEPTH \
 -b 02_info/bam.filelist -out 12_ngsLD/$i/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"_"$i"
 
 #input position file
