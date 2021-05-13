@@ -28,7 +28,7 @@ MAX_DEPTH=$(echo "($N_IND * $MAX_DEPTH_FACTOR)" |bc -l)
 # perform gwas on all samples
 angsd -P $NB_CPU -nQueueSize 50 -ybin $PHENO -doAsso 2 -GL 2 \
 -doPost 1 -doMajorMinor 1 -doMaf 1 -doCounts 1 \
--remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -minMaf $MIN_MAF -setMaxDepth $MAX_DEPTH \
+-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -minMaf $MIN_MAF -setMaxDepth $MAX_DEPTH -setMinDepthInd $MIN_DEPTH \
 $REGIONS -b 02_info/bam.filelist -out 09_gwas/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".binary.gwas
 
 
