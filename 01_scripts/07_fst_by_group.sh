@@ -49,7 +49,7 @@ echo "will filter for sites with at least one read in $MIN_IND individuals, whic
 angsd -P $NB_CPU \
 -dosaf 1 -GL 2 -doMajorMinor 3 \
 -anc 02_info/genome.fasta \
--remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND \
+-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMinDepthInd $MIN_DEPTH \
 -sites 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
 -rf 02_info/regions_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR" \
 -b 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist -out 07_fst_by_pop_pair/$GROUP/"$i"_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
