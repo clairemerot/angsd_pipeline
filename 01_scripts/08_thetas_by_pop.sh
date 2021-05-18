@@ -26,12 +26,17 @@ source 01_scripts/01_config.sh
 
 
 # Do thetas for all population listed
-#note that as bamlist I used teh ones with similar sample size drawn at the step 07 when doing the Fst.
-#if samplesize differences is not a pb, one can replace 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist by 02_info/"$i"bam.filelist
+	#to work on a signle population, comment the loop and use
+	#i="popname"
 cat $POP_FILE1 | while read i
 do
 	echo $i
-	N_IND=$(wc -l 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist | cut -d " " -f 1)
+	#note that as bamlist I used teh ones with similar sample size drawn at the step 07 when doing the Fst.
+	#if samplesize differences is not a pb, one can replace 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist by 02_info/"$i"bam.filelist
+	BAM_LIST=07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist
+	#BAM_LIST=02_info/"$i"bam.filelist
+	
+	N_IND=$(wc -l $BAM_LIST | cut -d " " -f 1)
 	MIN_IND_FLOAT=$(echo "($N_IND * $PERCENT_IND)"| bc -l)
 	MIN_IND=${MIN_IND_FLOAT%.*} 
 	MAX_DEPTH=$(echo "($N_IND * $MAX_DEPTH_FACTOR)" |bc -l)
@@ -46,7 +51,7 @@ do
 	-dosaf 1 -GL 2 -doMajorMinor 1 -doCounts 1 \
 	-anc 02_info/genome.fasta \
 	-remove_bads 1 -minMapQ 30 -minQ 20 -minInd $MIN_IND -setMaxDepth $MAX_DEPTH -setMinDepthInd $MIN_DEPTH \
-	-b 07_fst_by_pop_pair/$GROUP/"$i"subsetbam.filelist -out 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
+	-b $BAM_LIST -out 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 	
 	echo "estimate real sfs for pop $i"
 	realSFS 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".saf.idx -P $NB_CPU -nSites $NSITES  -maxIter 50 > 08_thetas/"$i"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"."$NSITES"
