@@ -236,6 +236,30 @@ Eric made a faster script (also in the utility folder) called "optimized", which
 ```
 python3 01_scripts/utility_scripts/ld_by_blocks_optimized.py "$LD_FILE" 500 "$LD_FILE"_by_500.ld
 ```
+
+
+Below are a few lines of codes that would help representing it into a heatmap in R
+
+```
+FILE=""
+mat_ld_all_chr1<-read.table(FILE, header=T)
+mat_ld_all_chr1<-mat_ld_all_chr1[-which(mat_ld_all_chr1$Pos1==mat_ld_all_chr1$Pos2),]
+head(mat_ld_all_chr1)
+
+variable_name=0.02
+
+mat_ld_all_chr1_var<-mat_ld_all_chr1[mat_ld_all_chr1$Percent==variable_name,]
+head(mat_ld_all_chr1_var)
+
+ggplot(mat_ld_all_chr1_var,aes(x=Pos1/1000,y=Pos2/1000)) + theme_classic() +
+  geom_tile(aes(fill=R2))+
+  scale_fill_gradientn(colours=c("white","lightgrey","grey80","turquoise","deepskyblue3","blue3","navyblue","black"), limits=c(0,1), values=c(0,0.125,0.25,0.375,0.5,0.675,0.75,1), name="R2")+ xlab("position (Mb)") + ylab("position(Mb)") +
+  scale_x_continuous(expand=c(0.02,0))+
+  scale_y_continuous(expand=c(0.02,0)) +
+  coord_fixed(ratio = 1)
+
+```
+
 B- The second script is more specific, it is used to calculate LD on sub-groups of individuals (for instance homokaryotes of an inversion). 
 
 To make Ld comparable between groups, it will subset each group to have the same number of samples, using a R script
