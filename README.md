@@ -60,16 +60,25 @@ grep -e ">" 02_info/genome.fasta | awk 'sub(/^>/, "")' | sort -k1 > 02_info/regi
 ```
 - edit the 01_config.sh file
 
-choose MIN_MAF, PERCENT_IND filters, MAX_DEPTH filter for intials steps
+choose MIN_MAF, PERCENT_IND, MIN_DEPTH, MAX_DEPTH filter for intials steps
+MAF is the minor allele frequency. you may want to adjust to your dataset and/or interest into rarer variants. Default value is 0.05
+PERCENT_IND is the percentage if individuals for which we ask to have at least MIN_DEPTH reads to keep the position. It will remove position not well covered by sequences.
+MIN_DEPTH is usualy set to 1 for low-coverage data but if your data is 4-5x, you may prefer to ask at least 2 reads for instance. One may also play with the percentage of individuals. 
+MAX_DEPTH should be set at about 3-4 times the expected coverage if you want to exclude from your analyses the positions which may belong to duplicated or repeated regions.
+
 For later steps, choose WINDOW and WINDOW_STEP for sliding-windows analyses, and K_MIN, K_MAX for admixture analysis
 
 ## 02_LIST_BAMFILES_AND_LIST_BY_POP
 this script will make a list of all bamfiles and several list by population, based on information in bamfile names and pop.txt
+WARNING: you may have blanks or duplicates -> if you want to check them you can keep them but for all regular analysis it will be important to remove them from the bamlist.
+Blanks will be useless as there are nothing and have almost no reads. Duplicates will messed up with the PCA as they will have a very high covariance.
 
 edit script if you want to add another way of grouping (group.txt)
 ```
 ./01_scripts/02_list_bamfiles.sh
 ```
+WARNING: if you re-run this script after editing your bam.filelist (e.g. to remove duplicates or outliers), it will replace it...
+
 ## 03_RUN_INITIAL_ANALYSIS_ON_WHOLE_DATASET
 this script will work on all bamfiles and calculate saf, maf & genotype likelihood on the whole dataset. It will output in 
 02_info folder the list of SNP which passed the MIN_MAF and PERCENT_IND filters & their Major-minor alleles (sites_*)
@@ -79,11 +88,12 @@ maybe edit the number of cpu NB_CPU and allocated memory/time
 ```
 sbatch 01_scripts/03_saf_maf_gl_all.sh
 ```
+
 ## 04_PCA_VISUALISE_CHECK_WHETHER_YOU_WANT_TO_EXCLUDE_OUTLIERS
 this script will work on all individuals using the beagle genotype likelihood and calculate a covariance matrix with angsd.
 it also output the pca with R, and visualisation in pdf
 
-check for outliers (or duplicates), one may to re-run step 03 and 04 with an edited bamlist
+The PCA tend to be driven by few outliers (unclear why) and by duplicates (typically 2 points at an extreme of a PC). They will also be affected by related or inbred samples that co-vary too much with each other. Check for all that, and remove the ones you want. (For duplicate we often keep the one with the more coverage) by editing the bam.filelist. Finally re-run step 03 and 04 with an edited bamlist
 
 this requires pcangsd to be cloned and a version of Python v2 with alias "python2"
 
@@ -91,7 +101,8 @@ maybe edit NB_CPU and memory (sometimes require a lot of memory >100 G)
 ```
 sbatch 01_scripts/04_pca.sh
 ```
-for further visualisation using information from info.txt, the script 01_scripts/Rscripts/visualise_pca.r can be useful
+for further visualisation using information from info.txt, the script 01_scripts/Rscripts/visualise_pca.r can be useful.
+The current visualisation is very basic and was tuned for my 3-groups inversion so it uses Kernel statistics to colour into three groups. Don't bother too much about it, just look at the general repartition of points and export the .pca file to your computer to tune the colours to your own needs (population, sex, etc)
 
 
 ## 05_ADMIXTURE_ANALYSIS
