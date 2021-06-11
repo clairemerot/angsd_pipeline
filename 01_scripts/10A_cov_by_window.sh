@@ -8,7 +8,7 @@
 #SBATCH --time=7-00:00
 #SBATCH --mem=1G
 
-###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
+###this script will split the beagle into windows and calculate the covariance matrix of each window
 #maybe edit
 NB_CPU=4 #change accordingly in SLURM header
 #window_size=760000 #nb of Snps per window - this is for a window of the size of my biggest chromosome
