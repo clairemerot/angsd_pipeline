@@ -221,13 +221,13 @@ VIF=2
 sbatch 01_scripts/11_plink_pruning.sh
 ```
 ## 12 LD calculation by NGSLD
-A- This step uses NGSld https://github.com/fgvieira/ngsLD to calculate linkage disequilibrium.
+There are two sets of scripts: the ones "byLG" which will loop on chromosomes to do them separately, and the ones "fusion" that will do two chromosomes, including LD within adn between chromosomes.
+
+Step A is making a begale file with more stringent filtering
 
 To reduce computation time and focus on informative positions, this script re-run the 1st step of ANGSD to output a beagle with a differnt threhold of MAF and percent of individuals with at least 1 read, and by chromosome (LG).
 
 This may be edited in the script with the following variables. region_LG.txt is a text file with one chromosome name per line. It loops over it, but it can also be parrallelized by chromosome.
-
-
 
 
 ```
@@ -236,10 +236,11 @@ MIN_MAF=0.10 #filter : will keep SNP above this allele frequency (over all indiv
 PERCENT_IND=0.75 #filter : will keep SNP with at least one read for this percentage of individuals
 MAX_DEPTH_FACTOR=3 #filter : will keep SNP with less than X time the nb of individuals total coverage
 ```
-```
-sbatch 01_scripts/12A_ngsLD_byLG.sh
-```
-LD calculation is followed by a python script writted by Eric Normandeau (ld_by_blocks.py) which summarize the LD by blocks of a given size, and output the different quantile of the R²/D,etc distribution. It will need the header.txt file to be in the folder 12_ngsLD.
+WARNING: check very well the number of sites in the beagle output (either counting the number of lines in the beagle or the SITEs file. If this is too big >50,000 SNPs it will create very very big matrices which may crash the server (terabytes size!!). you may want to either re-run step A with more stringent filters or adjust the parameter in ngsLD that will use a random subset of your snps
+
+Step B (& C)  uses NGSld https://github.com/fgvieira/ngsLD to calculate linkage disequilibrium.
+
+LD calculation is followed by a python script writted by Eric Normandeau (ld_by_blocks_XX.py) which summarize the LD by blocks of a given size, and output the different quantile of the R² distribution. It will need the header.txt file to be in the folder 12_ngsLD.
 
 Eric made a faster script (also in the utility folder) called "optimized", which runs faster but only output the R²em and first quantile (this is usually enough for most visualisation)
 
@@ -247,7 +248,6 @@ Eric made a faster script (also in the utility folder) called "optimized", which
 ```
 python3 01_scripts/utility_scripts/ld_by_blocks_optimized.py "$LD_FILE" 500 "$LD_FILE"_by_500.ld
 ```
-
 
 Below are a few lines of codes that would help representing it into a heatmap in R
 
@@ -271,7 +271,7 @@ ggplot(mat_ld_all_chr1_var,aes(x=Pos1/1000,y=Pos2/1000)) + theme_classic() +
 
 ```
 
-B- The second script is more specific, it is used to calculate LD on sub-groups of individuals (for instance homokaryotes of an inversion). 
+Step D - Those scripts more specific, they are used to calculate LD on sub-groups of individuals (for instance homokaryotes of an inversion). 
 
 To make Ld comparable between groups, it will subset each group to have the same number of samples, using a R script
 Then, it loops over each group to make sub-beagle for each group, calculate LD and output it by blocks
@@ -287,9 +287,6 @@ POP_FILE1=02_info/"$GROUP".txt #choose on which list of pop run the analyses
 MIN_MAF=0.10 #filter : will keep SNP above this allele frequency (over all individuals)
 PERCENT_IND=0.75 #filter : will keep SNP with at least one read for this percentage of individuals
 MAX_DEPTH_FACTOR=3 #filter : will keep SNP with less than X time the nb of individuals total coverage
-```
-```
-sbatch 01_scripts/12B_ngsLD_bygroup.sh
 ```
 
 
