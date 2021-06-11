@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J "10C_pca_chosen"
+#SBATCH -J "10D_pca_chosen"
 #SBATCH -o log_%j
 #SBATCH -c 3 
 #SBATCH -p medium
@@ -8,7 +8,7 @@
 #SBATCH --time=7-00:00
 #SBATCH --mem=100G
 
-###this script will work on all bamfiles and calculate saf, maf & genotype likelihood
+###this script will perform the PCA on a subset of chosen regions
 #maybe edit
 NB_CPU=3 #change accordingly in SLURM header
 
