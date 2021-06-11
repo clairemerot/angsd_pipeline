@@ -9,6 +9,9 @@
 #SBATCH --mem=100G
 
 ###this script will take a beagle by chromosome and cut it by subgroups of equal size to calculate LD on the same genotype original file
+#It is needed to run the 12A before with the same parameters (LG, filters, etc) because we re-use the same beagle.
+#check the numbr of sites in the beagle (nb of lines) as if it is too big, this will produce very very large files that may crash the computer or server. 
+#we should aim for <100000 sites
 
 #maybe edit
 NB_CPU=3 #change accordingly in SLURM header
