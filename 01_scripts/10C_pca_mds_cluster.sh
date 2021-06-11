@@ -8,8 +8,9 @@
 #SBATCH --time=7-00:00
 #SBATCH --mem=100G
 
-###this script will work on output from the lostruct analysis
+###this script will work on output from the lostruct analysis and implement the method form Huang et al 2020 to select significan tclusters of windows
 #it requires two Rscripts/make_pca_simple and Rscripts/outliers_clusters_mds_allLG
+
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
 ulimit -S -n 2048
