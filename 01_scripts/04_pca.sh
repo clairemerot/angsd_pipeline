@@ -18,21 +18,6 @@ NB_CPU=1 #change accordingly in SLURM header
 
 ##load the adequate python environment that you have created (1st intitialize conda with YOUR PATH to miniconda, except if you already have it in your .bashrc)
 
-# >>> conda initialize >>>
-# # !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/home/camer78/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)“
-#if [ $? -eq 0 ]; then    
-#eval "$__conda_setup“
-#else    
-#if [ -f "/home/camer78/miniconda3/etc/profile.d/conda.sh" ]; then
-#        . "/home/camer78/miniconda3/etc/profile.d/conda.sh"    
-#else        
-#export PATH="/home/camer78/miniconda3/bin:$PATH"    
-#fi
-#fi
-#unset __conda_setup 
-#<<< conda initialize <<<
-
 ##activate a conda environnement in which you have install the necessary library and python version
 #conda create --name pcangsd_test python=2.7 
 #conda activate pcangsd_test 
