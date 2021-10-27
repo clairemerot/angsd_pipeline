@@ -15,9 +15,18 @@ print(paste("loading",FILE))
 hwe<-read.table(FILE, header=T)
 
 #calculate Hexp & Hobs
+#the expected proportion of heterozygotes can be derived from the allelic frequency under HW (Hexp=2pq)
 hwe$Hexp<-2*(hwe$hweFreq)*(1-hwe$hweFreq) #Hexp = 2*(hweFreq)(1-hweFreq)
+#the observed proportion of heterozygotes can now be calculated using F, the departur from HW (F=1-Hobs/Hexp)
 hwe$Hobs<-hwe$Hexp-(hwe$F*hwe$Hexp) #Hobs= Hexp - F* Hexp
 head(hwe)
+
+#get the propotion of homozygotes
+#Freq is true frequency of minor allele=Hminor+ Hobs/2 (the proportion of homozygotes at minor allele+ half the proportion of observed heterozygotes)
+#so the proportion of homozygotes for the minor alleles at each position is given by:
+hwe$Hminor<-hwe$Freq-(hwe$Hobs/2)
+#and the proportion of homozygotes at the major allele
+hwe$Hmajor<-1-hwe$Freq-(hwe$Hobs/2)
 
 #output the same hwe matrix results but with estimated Hobs - big file - value are for each position
 write.table(hwe, paste0(FILE,".Hobs"), row.names=F, quote=F, sep="\t")
