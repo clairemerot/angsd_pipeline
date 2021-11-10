@@ -305,6 +305,8 @@ This step use the -hwe module of angsd to output HW statistics per population/gr
 I have add a Rscript it to extract the number of heterozygotes observed at each SNP.
 
 We later uses the windowscannr library in R to calculate Hobs along the genome for each group
+https://github.com/tavareshugo/WindowScanR
+
 ```
 sbatch 01_scripts/13_hwe.sh
 ```
