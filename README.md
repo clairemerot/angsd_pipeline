@@ -205,7 +205,19 @@ N_MDS=50 #nb of MDS dimension in the output
 sbatch 01_scripts/10B_pca_lostruct.sh
 ```
 
-C- After the analysis of the MDS which may highlight regions of interest, or if one is interested in doing PCA on a chosen window, this script will call select the region in the beagle using a python script written by Eric Normandeau, call Pcangsd to get the covariance matrix, and a R script to get the PCa and plot it.
+C and D- After the analysis of the MDS which may highlight regions of interest, or if one is interested in doing PCA on a chosen window
+
+The script 10C will run automatically on all the MDS axis chosen to output the cluster of windows which are outliers on each MDS, and the associated PCA. 
+One will need to adjust key parameters to one's dataset. See L31:
+#parameters to group together into a cluster the outliers windows
+max_MDS=11 #nb of mds on whcih to work
+sd_lim=4 #limit for being outlier
+x_between=20 #merge window with this number of windows between them
+min_n_window=5 #remove cluster with less than this number of window
+
+It will output pca,eigen-values and images for each cluster of windows (by MDS) and a list of MDS/windows outliers.
+
+The script 10D is more of a manual/custom one that will call select the region in the beagle using a python script written by Eric Normandeau, call Pcangsd to get the covariance matrix, and a R script to get the PCa and plot it.
 
 important: this requires a file with two column with the start and stop of the wanted region separated by a tab
 for instance
@@ -214,9 +226,7 @@ LG1_125 LG1_456
 ```
 
 It will output pca, eigen-values and images.
-```
-sbatch 01_scripts/10C_pca_chosen_regions.sh
-```
+
 
 ## 11 LD pruning with PLINK
 This step allow outputing genotype likelihoods in plink format and run plink to extract a list of LD-pruned SNPs.
