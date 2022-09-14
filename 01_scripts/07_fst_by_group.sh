@@ -22,7 +22,8 @@ POP_FILE1=02_info/"$GROUP".txt #choose on which list of pop run the analyses
 
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
-module load angsd
+module load angsd/0.931 #only with this version the SFS/FST script runs well (edit in sept 2022)
+#make sure you index the sites file with the same version 
 ulimit -S -n 2048
 
 #prepare variables - avoid to modify
