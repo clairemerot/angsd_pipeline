@@ -17,7 +17,7 @@ REGIONS="" # to remove the options to focus on a limited number of regions
 # Important: Move to directory where job was submitted
 cd $SLURM_SUBMIT_DIR
 
-module load angsd
+module load angsd/0.931
 ulimit -S -n 2048
 
 #prepare variables - avoid to modify
