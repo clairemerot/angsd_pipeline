@@ -58,19 +58,9 @@ $REGIONS -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"
 #makes a region file matching the sites files and with same order
 #index sites file
 echo "from the maf file, extract a list of SNP chr, positoin, major all, minor all"
-gunzip 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".mafs.gz 
+zcat 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".mafs.gz | cut -f1-4 | tail -n+2 | tee > 02_info/sites_all_maf"$MIN_MAF"_pctind_"$PERCENT_IND" 02_info/regions_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 
-INFILE=03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".mafs
 OUTFILE_sites=02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 OUTFILE_regions=02_info/regions_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 
-Rscript 01_scripts/Rscripts/make_sites_list_maxdepth_simple.R "$INFILE" "$OUTFILE_sites" "$OUTFILE_regions"
-
 angsd sites index $OUTFILE_sites
-
-#Eric propose a much shorter version using bash to cut the 4 columns of the mafs.gz. but then angsd is unable to index it
-#I can't find the problem, so I came back to older solution with R which works
-#gunzip -c 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind_"$PERCENT_IND".mafs.gz | cut -f -4 > 02_info/sites_all_maf"$MIN_MAF"_pctind_"$PERCENT_IND"
-
-
-
