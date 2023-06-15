@@ -58,7 +58,7 @@ $REGIONS -out 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"
 #makes a region file matching the sites files and with same order
 #index sites file
 echo "from the maf file, extract a list of SNP chr, positoin, major all, minor all"
-zcat 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".mafs.gz | cut -f1-4 | tail -n+2 | tee > 02_info/sites_all_maf"$MIN_MAF"_pctind_"$PERCENT_IND" 02_info/regions_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
+zcat 03_saf_maf_gl_all/all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR".mafs.gz | cut -f1-4 | tail -n+2 | tee > 02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND" 02_info/regions_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 
 OUTFILE_sites=02_info/sites_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
 OUTFILE_regions=02_info/regions_all_maf"$MIN_MAF"_pctind"$PERCENT_IND"_maxdepth"$MAX_DEPTH_FACTOR"
